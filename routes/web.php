@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\OvertimeController;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Route;
 
@@ -18,14 +20,22 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// new add
-
 Route::get('/dashboard', function () {
     $totalEmployees = Employee::count();
 
     return view('dashboard', compact('totalEmployees'));
 })->middleware(['auth'])->name('dashboard');
 
+// new add
+Route::middleware(['auth'])->group(function () {
+    Route::resource('leaves', LeaveController::class)->middleware('auth');
+});
+// end new add
+
+// new add
+Route::middleware(['auth'])->group(function () {
+    Route::resource('overtimes', OvertimeController::class)->middleware('auth');
+});
 // end new add
 
 Route::middleware('auth')->group(function () {

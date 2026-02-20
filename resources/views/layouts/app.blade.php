@@ -21,6 +21,8 @@
             <h3>EMS</h3>
             <a href="/dashboard" style="color:white;display:block;margin:10px 0;">Dashboard</a>
             <a href="/employees" style="color:white;display:block;margin:10px 0;">Employees</a>
+            <a href="/overtimes" style="color:white;display:block;margin:10px 0;">Overtimes</a>
+            <a href="/leaves" style="color:white;display:block;margin:10px 0;">Leaves</a>
         </div>
 
         <!-- Main Content -->
