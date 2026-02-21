@@ -1,12 +1,35 @@
+<x-app-layout>
+
 <h2>Edit Overtime</h2>
 
-<form method="POST" action="{{ route('overtimes.update', $overtime->id) }}" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
+<form method="POST" action="{{ route('overtimes.update', $overtime->id) }}">
+@csrf
+@method('PUT')
 
-    Name: <input type="text" name="name" value="{{ $overtime->employee->name }}"><br><br>
-    Type: <input type="text" name="type" value="{{ $overtime->employee->type }}"><br><br>
-    Date: <input type="date" name="date" value="{{ $overtime->date }}"><br><br>
+Name:
+<select name="employee_id">
+@foreach($employees as $emp)
+<option value="{{ $emp->id }}"
+    {{ $overtime->employee_id == $emp->id ? 'selected' : '' }}>
+    {{ $emp->name }}
+</option>
+@endforeach
+</select>
+<br><br>
 
-    <button type="submit">Update</button>
+Type:
+<select name="type">
+<option {{ $overtime->type == 'OnDay' ? 'selected' : '' }}>OnDay</option>
+<option {{ $overtime->type == 'OffDay' ? 'selected' : '' }}>OffDay</option>
+</select>
+<br><br>
+
+Date:
+<input type="date" name="date" value="{{ $overtime->date }}">
+<br><br>
+
+<button type="submit">Update</button>
+
 </form>
+
+</x-app-layout>

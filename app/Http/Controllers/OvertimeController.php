@@ -30,7 +30,33 @@ class OvertimeController extends Controller
 
     public function edit(Overtime $overtime)
     {
+        $overtime = Overtime::findOrFail($overtime->id);
         $employees = Employee::all();
         return view('overtimes.edit', compact('overtime', 'employees'));
+    }
+
+    // Update
+
+    public function update(Request $request, $id)
+    {
+        $overtime = Overtime::findOrFail($id);
+
+        $overtime->update([
+            'employee_id' => $request->employee_id,
+            'type' => $request->type,
+            'date' => $request->date,
+        ]);
+
+        return redirect()->route('overtimes.index')->with('success', 'Updated!');
+    }
+
+    // Delete
+
+    public function destroy($id)
+    {
+        $overtime = Overtime::findOrFail($id);
+        $overtime->delete();
+
+        return redirect()->route('overtimes.index')->with('success', 'Deleted!');
     }
 }
