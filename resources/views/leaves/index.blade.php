@@ -11,6 +11,7 @@
     <th>From</th>
     <th>To</th>
     <th>Days</th>
+    <th>Action</th>
 </tr>
 
 @foreach($leaves as $leave)
@@ -20,6 +21,18 @@
     <td>{{ $leave->from_date }}</td>
     <td>{{ $leave->to_date }}</td>
     <td>{{ $leave->days }}</td>
+
+    <td>
+<!--Edit Button-->
+        <a href="{{ route('leaves.edit', $leave->id) }}">Edit</a>
+
+        <!-- Delete Button -->
+         <form action="{{ route('leaves.destroy', $leave->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Delete</button>
+        </form>
+    </td>
 </tr>
 @endforeach
 

@@ -35,4 +35,42 @@ class LeaveController extends Controller
 
         return redirect()->route('leaves.index');
     }
+
+    // Edit and Update methods would go here
+
+    public function edit($id)
+    {
+        $leave = Leave::findOrFail($id);
+        $employees = Employee::all();
+
+        return view('leaves.edit', compact('leave', 'employees'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $leave = Leave::findOrFail($id);
+
+        $days = \Carbon\Carbon::parse($request->from_date)
+            ->diffInDays(\Carbon\Carbon::parse($request->to_date)) + 1;
+
+        $leave->update([
+            'employee_id' => $request->employee_id,
+            'type' => $request->type,
+            'from_date' => $request->from_date,
+            'to_date' => $request->to_date,
+            'days' => $days,
+        ]);
+
+        return redirect()->route('leaves.index');
+    }
+
+    // Destroy method would go here
+
+    public function destroy($id)
+    {
+        $leave = Leave::findOrFail($id);
+        $leave->delete();
+
+        return redirect()->route('leaves.index');
+    }
 }

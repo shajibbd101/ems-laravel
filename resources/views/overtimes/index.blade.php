@@ -9,6 +9,7 @@
     <th>Name</th>
     <th>Type</th>
     <th>Date</th>
+    <th>Action</th>
 </tr>
 
 @foreach($overtimes as $ot)
@@ -16,6 +17,15 @@
     <td>{{ $ot->employee->name }}</td>
     <td>{{ $ot->type }}</td>
     <td>{{ $ot->date }}</td>
+    <td>
+        <a href="{{ route('overtimes.edit', $ot->id) }}">Edit</a>
+
+        <form action="{{ route('overtimes.destroy', $ot->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Delete</button>
+        </form>
+    </td>
 </tr>
 @endforeach
 

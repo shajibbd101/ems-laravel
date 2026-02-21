@@ -37,6 +37,8 @@
         <td>{{ $employee->salary }}</td>
         <td>
             <a href="{{ route('employees.edit', $employee->id) }}">Edit</a>
+            <!-- <form action="{{ route('employees.edit', $employee->id) }}" method="GET" style="display:inline;">
+                <button type="submit">Edit</button> -->
 
             <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline;">
                 @csrf

@@ -25,4 +25,12 @@ class OvertimeController extends Controller
         Overtime::create($request->all());
         return redirect()->route('overtimes.index');
     }
+
+    // Edit 
+
+    public function edit(Overtime $overtime)
+    {
+        $employees = Employee::all();
+        return view('overtimes.edit', compact('overtime', 'employees'));
+    }
 }
