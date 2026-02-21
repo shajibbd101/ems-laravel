@@ -1,43 +1,54 @@
 <x-app-layout>
 
-<h2>Edit Leave</h2>
+<div class="max-w-xl mx-auto py-8">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Leave</h2>
 
-<form action="{{ route('leaves.update', $leave->id) }}" method="POST">
-    @csrf
-    @method('PUT')
+    <form method="POST" action="{{ route('leaves.update', $leave->id) }}"
+          class="bg-white p-6 rounded-lg shadow space-y-4">
+        @csrf
+        @method('PUT')
 
-    <label>Employee:</label>
-    <select name="employee_id">
-        @foreach($employees as $emp)
-            <option value="{{ $emp->id }}"
-                {{ $leave->employee_id == $emp->id ? 'selected' : '' }}>
-                {{ $emp->name }}
-            </option>
-        @endforeach
-    </select>
+        <div>
+            <label class="block mb-1 font-medium">Employee</label>
+            <select name="employee_id" class="w-full border rounded p-2">
+                @foreach($employees as $emp)
+                    <option value="{{ $emp->id }}"
+                        {{ $leave->employee_id == $emp->id ? 'selected' : '' }}>
+                        {{ $emp->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-    <br><br>
+         <div>
+            <label class="block mb-1 font-medium">Type</label>
+            <select name="type" class="w-full border rounded p-2">
+                <option value="CL" {{ $leave->type == 'CL' ? 'selected' : '' }}>Casual Leave</option>
+                <option value="ML" {{ $leave->type == 'ML' ? 'selected' : '' }}>Medical Leave</option>
+                <option value="RL" {{ $leave->type == 'RL' ? 'selected' : '' }}>Restricted Leave</option>
+            </select>
+        </div>
 
-    <label>Type:</label>
-    <select name="type">
-        <option value="CL" {{ $leave->type == 'CL' ? 'selected' : '' }}>CL</option>
-        <option value="ML" {{ $leave->type == 'ML' ? 'selected' : '' }}>ML</option>
-        <option value="RL" {{ $leave->type == 'RL' ? 'selected' : '' }}>RL</option>
-    </select>
+        <div>
+            <label class="block mb-1 font-medium">From Date</label>
+            <input type="date" name="from_date"
+                   value="{{ $leave->from_date }}"
+                   class="w-full border rounded p-2">
+        </div>
 
-    <br><br>
+        <div>
+            <label class="block mb-1 font-medium">To Date</label>
+            <input type="date" name="to_date"
+                   value="{{ $leave->to_date }}"
+                   class="w-full border rounded p-2">
+        </div>
+        <br>
 
-    <label>From Date:</label>
-    <input type="date" name="from_date" value="{{ $leave->from_date }}">
-
-    <br><br>
-
-    <label>To Date:</label>
-    <input type="date" name="to_date" value="{{ $leave->to_date }}">
-
-    <br><br>
-
-    <button type="submit">Update</button>
-</form>
+        <button type="submit"
+            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            Update
+        </button>
+    </form>
+</div>
 
 </x-app-layout>
