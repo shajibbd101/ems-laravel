@@ -73,4 +73,17 @@ class LeaveController extends Controller
 
         return redirect()->route('leaves.index');
     }
+
+    // use name box fo search name (overtime & Leave)
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
+
+        $employees = Employee::where('name', 'LIKE', "%{$query}%")
+            ->select('id', 'name')
+            ->limit(5)
+            ->get();
+
+        return response()->json($employees);
+    }
 }
