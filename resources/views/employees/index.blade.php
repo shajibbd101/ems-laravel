@@ -1,9 +1,10 @@
 <x-app-layout>
 
 <div class="max-w-7xl mx-auto py-8 px-4">
-
+    
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Employee List</h2>
+        <br><br><br>
+        <h2 class="text-3xl font-bold text-gray-800 text-center">Employee List</h2>
         <a href="{{ route('employees.create') }}"
            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
             + Add Employee

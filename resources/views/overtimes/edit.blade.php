@@ -1,7 +1,7 @@
 <x-app-layout>
 <div class="max-w-xl mx-auto py-8">
-
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Overtime</h2>
+    <br>
+    <h2 class="text-3xl font-bold mb-6 text-gray-800 text-center">Edit Overtime</h2>
 
     <form method="POST" action="{{ route('overtimes.update', $overtime->id) }}"
           class="bg-white p-6 rounded-lg shadow space-y-4">
