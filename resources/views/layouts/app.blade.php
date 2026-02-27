@@ -23,6 +23,12 @@
             <a href="/employees" style="color:white;display:block;margin:10px 0;">Employees</a>
             <a href="/overtimes" style="color:white;display:block;margin:10px 0;">Overtimes</a>
             <a href="/leaves" style="color:white;display:block;margin:10px 0;">Leaves</a>
+           <form method="POST" action="{{ route('logout') }}" style="margin-top:10px;">
+                @csrf
+                <button type="submit" style="color:white; background:none; border:none; cursor:pointer;">
+                    Logout
+                </button>
+            </form>
         </div>
 
         <!-- Main Content -->
