@@ -22,10 +22,20 @@
             <input type="text" name="phone" class="w-full border rounded p-2">
         </div>
 
+        <!-- add -->
         <div>
-            <label class="block mb-1 font-medium">Department</label>
-            <input type="text" name="department" class="w-full border rounded p-2">
+            <label class="block mb-1 font-medium">Designation</label>
+            <select name="designation" class="w-full border rounded p-2">
+                <option value="Security Guard">Security Guard</option>
+                <option value="Security Habilder">Security Habilder</option>
+            </select>
         </div>
+        <!-- end -->
+
+        <!-- <div>
+            <label class="block mb-1 font-medium">Designation</label>
+            <input type="text" name="designation" class="w-full border rounded p-2">
+        </div> -->
 
         <div>
             <label class="block mb-1 font-medium">Salary</label>

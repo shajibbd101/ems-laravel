@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('photo')->nullable();
-            $table->string('department');
+            $table->string('designation');
             $table->decimal('salary', 10, 2);
             $table->date('joining_date');
             $table->timestamps();

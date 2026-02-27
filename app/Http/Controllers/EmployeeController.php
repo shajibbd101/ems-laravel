@@ -35,7 +35,7 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees',
             'phone' => 'required',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'department' => 'required',
+            'designation' => 'required',
             'salary' => 'required|numeric',
             'joining_date' => 'required|date'
         ]);
@@ -67,7 +67,7 @@ class EmployeeController extends Controller
                 'name' => 'required',
                 'email' => 'required|email|unique:employees,email,' . $employee->id,
                 'phone' => 'required',
-                'department' => 'required',
+                'designation' => 'required',
                 'salary' => 'required|numeric',
                 'joining_date' => 'required|date',
                 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'

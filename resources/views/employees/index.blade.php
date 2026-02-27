@@ -34,7 +34,7 @@
                     <th class="p-3 text-center">Photo</th>
                     <th class="p-3 text-center">Email</th>
                     <th class="p-3 text-center">Phone</th>
-                    <th class="p-3 text-center">Department</th>
+                    <th class="p-3 text-center">Designation</th>
                     <th class="p-3 text-center">Salary</th>
                     <th class="p-3 text-center">Action</th>
                 </tr>
@@ -54,7 +54,7 @@
                     </td>
                     <td class="p-3 text-center">{{ $employee->email }}</td>
                     <td class="p-3 text-center">{{ $employee->phone }}</td>
-                    <td class="p-3 text-center">{{ $employee->department }}</td>
+                    <td class="p-3 text-center">{{ $employee->designation }}</td>
                     <td class="p-3 text-center">{{ $employee->salary }}</td>
                     <td class="p-3 text-center">
                         <a href="{{ route('employees.edit', $employee->id) }}" class="text-blue-600 hover:underline">Edit</a>
