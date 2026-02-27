@@ -14,7 +14,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('employees', EmployeeController::class);
-    Route::resource('overtimes', OvertimeController::class);
+    //remove  Route::resource('overtimes', OvertimeController::class);
 });
 
 
@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
 // new add
 Route::middleware(['auth'])->group(function () {
-    Route::resource('overtimes', OvertimeController::class)->middleware('auth');
+   //remove Route::resource('overtimes', OvertimeController::class)->middleware('auth');
 });
 // end new add
 
@@ -57,9 +57,39 @@ Route::middleware('auth')->group(function () {
     Route::get('name_search', [OvertimeController::class, 'name_search'])
         ->middleware(['auth', 'verified'])
         ->name('name_search');
-// end search option for name in overtime and leave
+// end search option for name in overtime
+
+// add search option for name in overtime
+    Route::get('name_search', [LeaveController::class, 'name_search'])
+        ->middleware(['auth', 'verified'])
+        ->name('name_search');
+// end search option for name in overtime
+
+// add search option for name in Employee
+    Route::get('name_search', [EmployeeController::class, 'name_search'])
+        ->middleware(['auth', 'verified'])
+        ->name('name_search');
+// end search option for name in Employee
 
 // use name box fo search name (overtime & Leave)
 Route::get('/employee-search', [LeaveController::class, 'search']);
+
+// add month filter for overtime
+Route::get('overtimes/month', [OvertimeController::class, 'month'])
+    ->name('overtimes.month');
+
+    // Resource Route
+//remove Route::resource('overtimes', OvertimeController::class);
+// end month filter for overtime
+Route::middleware(['auth'])->group(function () {
+
+    // ✅ Month filter FIRST
+    Route::get('overtimes/month', [OvertimeController::class, 'month'])
+        ->name('overtimes.month');
+
+    // ✅ Resource AFTER
+    Route::resource('overtimes', OvertimeController::class);
+
+});
 
 require __DIR__.'/auth.php';

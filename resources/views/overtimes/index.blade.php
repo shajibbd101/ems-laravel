@@ -13,13 +13,37 @@
     </div>
 
     <!-- add Search Option -->
-    <div>
+    <!-- <div>
         <form action="{{ route('name_search') }}" method="GET">
             <input type="search" name="search" placeholder="Enter name" class="border rounded-lg px-4 py-2 w-1/2">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Search</button>
         </form>
     </div>
-    <br>
+    <br> -->
+
+    <div class="flex justify-between items-center mb-4">
+
+        <!-- 🔍 LEFT: Name Search (existing feature) -->
+        <form action="{{ route('name_search') }}" method="GET" class="flex gap-2">
+            <input type="search" name="search" placeholder="Enter name"
+                class="border rounded-lg px-4 py-2">
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                Search
+            </button>
+        </form>
+
+        <!-- 📅 RIGHT: Month Filter (new feature) -->
+        <form action="{{ route('overtimes.month') }}" method="GET" class="flex gap-2">
+            <input type="month" name="month"
+                class="border rounded-lg px-4 py-2">
+             <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                Month
+            </button>
+        </form>
+
+    </div>
      <!-- end Search Option -->
 
     <div class="bg-white shadow rounded-lg overflow-hidden">

@@ -96,4 +96,15 @@ class EmployeeController extends Controller
         $employee->delete();
         return redirect()->route('employees.index');
     }
+
+    // search function
+    public function name_search(Request $request)
+    {
+        $search = $request->search;
+
+        $employees = Employee::where('name', 'like', '%' . $search . '%')->get();
+
+        return view('employees.index', compact('employees'));
+    }
+    // end
 }

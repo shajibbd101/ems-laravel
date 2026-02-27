@@ -5,9 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Overtime;
 use App\Models\Employee;
+use Carbon\Carbon;
 
 class OvertimeController extends Controller
 {   
+
+    // public function index(Request $request)
+    // {
+    //     $query = Overtime::with('employee');
+
+    //     // 📅 Month filter only
+    //     if ($request->filled('month')) {
+    //         $month = Carbon::parse($request->month);
+
+    //         $query->whereYear('date', $month->year)
+    //             ->whereMonth('date', $month->month);
+    //     }
+
+    //     $overtimes = $query->get();
+
+    //     return view('overtimes.index', compact('overtimes'));
+    // }
 
     public function index()
     {
@@ -75,4 +93,22 @@ class OvertimeController extends Controller
         return view('overtimes.index', compact('overtimes'));
     }
     // end
+
+    // add month filter
+    public function month(Request $request)
+    {
+        $query = Overtime::with('employee');
+
+        if ($request->filled('month')) {
+            $month = Carbon::parse($request->month);
+
+            $query->whereYear('date', $month->year)
+                ->whereMonth('date', $month->month);
+        }
+
+        $overtimes = $query->get();
+
+        return view('overtimes.index', compact('overtimes'));
+    }
+    // end month filter
 }

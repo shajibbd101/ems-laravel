@@ -86,4 +86,19 @@ class LeaveController extends Controller
 
         return response()->json($employees);
     }
+
+     // search function
+    public function name_search(Request $request)
+    {
+        $search = $request->search;
+
+        $leaves = Leave::with('employee')
+            ->whereHas('employee', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        return view('leaves.index', compact('leaves'));
+    }
+    // end
 }
