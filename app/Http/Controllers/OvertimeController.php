@@ -7,7 +7,8 @@ use App\Models\Overtime;
 use App\Models\Employee;
 
 class OvertimeController extends Controller
-{
+{   
+
     public function index()
     {
         $overtimes = Overtime::with('employee')->get();
@@ -59,4 +60,19 @@ class OvertimeController extends Controller
 
         return redirect()->route('overtimes.index')->with('success', 'Deleted!');
     }
+
+    // search function
+    public function name_search(Request $request)
+    {
+        $search = $request->search;
+
+        $overtimes = Overtime::with('employee')
+            ->whereHas('employee', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        return view('overtimes.index', compact('overtimes'));
+    }
+    // end
 }

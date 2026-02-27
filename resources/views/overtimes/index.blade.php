@@ -1,4 +1,6 @@
 <x-app-layout>
+   
+
 <div class="max-w-7xl mx-auto py-8 px-4">
 
     <div class="flex justify-between items-center mb-6">
@@ -9,6 +11,16 @@
             + Add Overtime
         </a>
     </div>
+
+    <!-- add Search Option -->
+    <div>
+        <form action="{{ route('name_search') }}" method="GET">
+            <input type="search" name="search" placeholder="Enter name" class="border rounded-lg px-4 py-2 w-1/2">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Search</button>
+        </form>
+    </div>
+    <br>
+     <!-- end Search Option -->
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <table class="w-full text-left border-collapse">

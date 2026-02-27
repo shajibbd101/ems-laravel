@@ -52,6 +52,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// add search option for name in overtime and leave
+    Route::get('name_search', [OvertimeController::class, 'name_search'])
+        ->middleware(['auth', 'verified'])
+        ->name('name_search');
+// end search option for name in overtime and leave
+
 // use name box fo search name (overtime & Leave)
 Route::get('/employee-search', [LeaveController::class, 'search']);
 
