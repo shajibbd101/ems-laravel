@@ -8,9 +8,22 @@ use App\Models\Employee;
 
 class LeaveController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $leaves = Leave::with('employee')->get();
+        // $leaves = Leave::with('employee')->get();
+
+        $query = Leave::with('employee');
+
+        if ($request->search) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+
+        $leaves = $query->latest()
+                           ->paginate(5)
+                           ->withQueryString();
+
         return view('leaves.index', compact('leaves'));
     }
 

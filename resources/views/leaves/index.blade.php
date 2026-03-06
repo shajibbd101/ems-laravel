@@ -18,12 +18,15 @@
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Search</button>
         </form>
     </div>
-    <br>
      <!-- end Search Option -->
 
+     <div>
+         {{ $leaves->onEachSide(1)->links() }}
+    </div>
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <table class="w-full text-left border-collapse">
+
             <thead class="bg-gray-100">
                 <tr>
                     <th class="p-3 text-center">Name</th>

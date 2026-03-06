@@ -13,17 +13,15 @@
     </div>
 
     <div class="flex justify-between items-center mb-4">
-
         <!-- 🔍 LEFT: Name Search (existing feature) -->
         <form action="{{ route('overtimes.search') }}" method="GET" class="flex gap-2">
-            <input type="search" name="search" placeholder="Enter name"
+            <input type="search" name="search" value="{{ request('search') }}" placeholder="Enter name"
                 class="border rounded-lg px-4 py-2">
             <button type="submit"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg">
                 Search
             </button>
         </form>
-
         <!-- 📅 RIGHT: Month Filter (new feature) -->
         <form action="{{ route('overtimes.month') }}" method="GET" class="flex gap-2">
             <input type="month" name="month"
@@ -33,12 +31,15 @@
                 Month
             </button>
         </form>
-
     </div>
      <!-- end Search Option -->
+        <div>
+            {{ $overtimes->onEachSide(1)->links() }}
+        </div>
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <table class="w-full text-left border-collapse">
+
             <thead class="bg-gray-100">
                 <tr>
                     <th class="p-3 text-center">Name</th>

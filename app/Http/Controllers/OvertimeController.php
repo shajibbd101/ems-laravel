@@ -27,9 +27,21 @@ class OvertimeController extends Controller
     //     return view('overtimes.index', compact('overtimes'));
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        $overtimes = Overtime::with('employee')->get();
+        // $overtimes = Overtime::with('employee')->get();
+
+        $query = Overtime::with('employee');
+
+        if ($request->search) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+
+        $overtimes = $query->latest()
+                           ->paginate(5)
+                           ->withQueryString();
         return view('overtimes.index', compact('overtimes'));
     }
 
