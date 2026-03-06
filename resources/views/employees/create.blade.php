@@ -10,6 +10,9 @@
         <div>
             <label class="block mb-1 font-medium">Name</label>
             <input type="text" name="name" class="w-full border rounded p-2">
+            @error('name')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div>
@@ -20,6 +23,9 @@
         <div>
             <label class="block mb-1 font-medium">Phone</label>
             <input type="text" name="phone" class="w-full border rounded p-2">
+            @error('phone')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- add -->
@@ -60,13 +66,5 @@
         </div>
     </form>
 </div>
-<!-- end -->
-@if ($errors->any())
-    <div class="alert alert-danger">
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-    </div>
-@endif
 
 </x-app-layout>
