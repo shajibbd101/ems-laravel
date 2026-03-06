@@ -25,6 +25,13 @@ class LeaveController extends Controller
         $days = \Carbon\Carbon::parse($request->from_date)
             ->diffInDays(\Carbon\Carbon::parse($request->to_date)) + 1;
 
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'type' => 'required',
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
+        ]);
+
         Leave::create([
             'employee_id' => $request->employee_id,
             'type' => $request->type,

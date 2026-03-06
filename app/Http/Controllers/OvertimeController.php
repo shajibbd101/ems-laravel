@@ -41,7 +41,24 @@ class OvertimeController extends Controller
 
     public function store(Request $request)
     {
-        Overtime::create($request->all());
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'type' => 'required',
+            'date' => 'required|date',
+        ]);
+
+        Overtime::create([
+            'employee_id' => $request->employee_id,
+            'type' => $request->type,
+            'date' => $request->date,
+        ]);
+
+        //  Overtime::create([
+        //     'employee_id' => $request->employee_id,
+        //     'type' => $request->type,
+        //     'date' => $request->date,
+        // ]);
+        // Overtime::create($request->all());
         return redirect()->route('overtimes.index');
     }
 

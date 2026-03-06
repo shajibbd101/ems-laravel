@@ -7,6 +7,16 @@
     <form method="POST" action="{{ route('leaves.store') }}"
           class="bg-white p-6 rounded-lg shadow space-y-4">
         @csrf
+<!-- 
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif -->
 
         <div>
             <label class="block mb-1 font-medium">Name</label>
@@ -17,6 +27,9 @@
 
             <!-- Hidden field to store selected employee ID -->
             <input type="hidden" name="employee_id" id="employee_id">
+            @error('employee_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
 
             <!-- Suggestion box -->
             <div id="suggestions"
@@ -36,12 +49,18 @@
             <label class="block mb-1 font-medium">From Date</label>
             <input type="date" name="from_date" id="from_date"
                    class="w-full border rounded p-2">
+            @error('from_date')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div>
             <label class="block mb-1 font-medium">To Date</label>
             <input type="date" name="to_date" id="to_date"
                    class="w-full border rounded p-2">
+            @error('to_date')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
         <br>
 
