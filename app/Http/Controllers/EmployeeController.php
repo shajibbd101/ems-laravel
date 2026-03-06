@@ -12,13 +12,24 @@ class EmployeeController extends Controller
         $query = Employee::query();
 
         // 🔍 Search
+        // if ($request->search) {
+        //     $query->where('name', 'LIKE', '%' . $request->search . '%')
+        //         ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+        // }
+
+        // Search
         if ($request->search) {
-            $query->where('name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            });
         }
 
         // 📄 Pagination
-        $employees = $query->paginate(5);
+        // $employees = $query->paginate(5);
+        $employees = $query->latest()
+                           ->paginate(5)
+                           ->withQueryString();
 
         return view('employees.index', compact('employees'));
     }

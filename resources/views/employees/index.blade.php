@@ -14,11 +14,10 @@
     <!-- add Search Option -->
     <div>
         <form action="{{ route('employees.search') }}" method="GET">
-            <input type="search" name="search" placeholder="Enter name" class="border rounded-lg px-4 py-2 w-1/2">
+            <input type="search" name="search" value="{{ request('search') }}" placeholder="Enter name" class="border rounded-lg px-4 py-2 w-1/2">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Search</button>
         </form>
     </div>
-    <br>
      <!-- end Search Option -->
 
     @if($employees->isEmpty())
@@ -27,9 +26,27 @@
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <table class="w-full text-left border-collapse">
+            <div class="mt-8 bg-white p-2 rounded-xl shadow flex justify-between items-center">
+
+                <div class="text-sm text-gray-500">
+                    Showing 
+                    <span class="font-semibold">{{ $employees->firstItem() }}</span>
+                    to 
+                    <span class="font-semibold">{{ $employees->lastItem() }}</span>
+                    of 
+                    <span class="font-semibold">{{ $employees->total() }}</span>
+                    results
+                </div>
+
+                <div>
+                    {{ $employees->onEachSide(1)->links() }}
+                </div>
+
+            </div>
+
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="p-3 text-center">ID</th>
+                    <!-- <th class="p-3 text-center">ID</th> -->
                     <th class="p-3 text-center">Name</th>
                     <th class="p-3 text-center">Photo</th>
                     <th class="p-3 text-center">Email</th>
@@ -43,7 +60,7 @@
             <tbody>
                 @foreach($employees as $employee)
                 <tr class="border-t hover:bg-gray-50">
-                    <td class="p-3 text-center">{{ $employee->id }}</td>
+                    <!-- <td class="p-3 text-center">{{ $employee->id }}</td> -->
                     <td class="p-3 text-center">{{ $employee->name }}</td>
                     <td class="p-3 text-center">
                         @if($employee->photo)
