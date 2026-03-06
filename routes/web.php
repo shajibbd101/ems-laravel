@@ -7,6 +7,7 @@ use App\Http\Controllers\OvertimeController;
 use App\Models\Employee;
 use App\Models\Overtime;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,18 @@ Route::get('/dashboard', function () {
         'totalOvertimeOffDay'
     ));
 })->middleware(['auth'])->name('dashboard');
+
+// Leave search route for autocomplete
+Route::get('/employee-search', function (Request $request) {
+    $query = $request->get('query');
+
+    $employees = Employee::where('name', 'LIKE', "%{$query}%")
+        ->limit(5)
+        ->get();
+
+    return response()->json($employees);
+});
+// Overtime search route for autocomplete Endpoint
 
 /*
 |--------------------------------------------------------------------------

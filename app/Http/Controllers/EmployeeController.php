@@ -32,12 +32,12 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:employees',
-            'phone' => 'required',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'email' => 'nullable|email|unique:employees',
+            'phone' => 'required|unique:employees',
             'designation' => 'required',
-            'salary' => 'required|numeric',
-            'joining_date' => 'required|date'
+            'salary' => 'nullable|numeric',
+            'joining_date' => 'nullable|date',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         // ✅ Get all data
@@ -65,11 +65,11 @@ class EmployeeController extends Controller
     {
             $request->validate([
                 'name' => 'required',
-                'email' => 'required|email|unique:employees,email,' . $employee->id,
-                'phone' => 'required',
+                'email' => 'nullable|email|unique:employees,email,' . $employee->id,
+                'phone' => 'required|unique:employees,phone,' . $employee->id,
                 'designation' => 'required',
-                'salary' => 'required|numeric',
-                'joining_date' => 'required|date',
+                'salary' => 'nullable|numeric',
+                'joining_date' => 'nullable|date',
                 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
             ]);
 

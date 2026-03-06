@@ -34,12 +34,14 @@
 
         <div>
             <label class="block mb-1 font-medium">From Date</label>
-            <input type="date" name="from_date" class="w-full border rounded p-2">
+            <input type="date" name="from_date" id="from_date"
+                   class="w-full border rounded p-2">
         </div>
 
         <div>
             <label class="block mb-1 font-medium">To Date</label>
-            <input type="date" name="to_date" class="w-full border rounded p-2">
+            <input type="date" name="to_date" id="to_date"
+                   class="w-full border rounded p-2">
         </div>
         <br>
 
@@ -90,6 +92,27 @@ document.getElementById('employee_search').addEventListener('keyup', function ()
             }
         });
 });
+
+//smart date validation
+
+        const fromDate = document.getElementById('from_date');
+        const toDate = document.getElementById('to_date');
+
+        fromDate.addEventListener('change', function () {
+            toDate.min = this.value;
+
+            // If to_date is earlier than from_date, clear it
+            if (toDate.value < this.value) {
+                toDate.value = '';
+            }
+        });
+
+        // Set initial min when page loads (for edit page)
+        window.onload = function () {
+            if (fromDate.value) {
+                toDate.min = fromDate.value;
+            }
+        };
 </script>
 
 </x-app-layout>

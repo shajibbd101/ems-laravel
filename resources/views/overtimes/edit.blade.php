@@ -10,14 +10,9 @@
 
         <div>
             <label class="block mb-1 font-medium">Employee</label>
-            <select name="employee_id" class="w-full border rounded p-2">
-                @foreach($employees as $emp)
-                    <option value="{{ $emp->id }}"
-                        {{ $overtime->employee_id == $emp->id ? 'selected' : '' }}>
-                        {{ $emp->name }}
-                    </option>
-                @endforeach
-            </select>
+            <input type="text" name="name" value="{{ $overtime->employee->name }}"
+                   class="w-full border rounded p-2" readonly>
+            <input type="hidden" name="employee_id" value="{{ $overtime->employee_id }}">
         </div>
 
         <div>

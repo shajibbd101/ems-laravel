@@ -14,12 +14,12 @@ return new class extends Migration
             Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone');
+            $table->string('email')->unique()->nullable();
+            $table->string('phone')->unique();
             $table->string('photo')->nullable();
             $table->string('designation');
-            $table->decimal('salary', 10, 2);
-            $table->date('joining_date');
+            $table->decimal('salary', 10, 2)->nullable();
+            $table->date('joining_date')->nullable();
             $table->timestamps();
         });
     }
