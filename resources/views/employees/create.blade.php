@@ -9,7 +9,7 @@
 
         <div>
             <label class="block mb-1 font-medium">Name</label>
-            <input type="text" name="name" class="w-full border rounded p-2">
+            <input type="text" name="name" value="{{ old('name') }}" class="w-full border rounded p-2">
             @error('name')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
@@ -17,12 +17,12 @@
 
         <div>
             <label class="block mb-1 font-medium">Email</label>
-            <input type="email" name="email" class="w-full border rounded p-2">
+            <input type="email" name="email" value="{{ old('email') }}" class="w-full border rounded p-2">
         </div>
 
         <div>
             <label class="block mb-1 font-medium">Phone</label>
-            <input type="text" name="phone" class="w-full border rounded p-2">
+            <input type="text" name="phone" value="{{ old('phone') }}" class="w-full border rounded p-2">
             @error('phone')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
@@ -38,14 +38,9 @@
         </div>
         <!-- end -->
 
-        <!-- <div>
-            <label class="block mb-1 font-medium">Designation</label>
-            <input type="text" name="designation" class="w-full border rounded p-2">
-        </div> -->
-
         <div>
             <label class="block mb-1 font-medium">Salary</label>
-            <input type="text" name="salary" class="w-full border rounded p-2">
+            <input type="text" name="salary" value="{{ old('salary') }}" class="w-full border rounded p-2">
         </div>
 
         <div>

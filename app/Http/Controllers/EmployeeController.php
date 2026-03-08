@@ -11,12 +11,6 @@ class EmployeeController extends Controller
     {
         $query = Employee::query();
 
-        // 🔍 Search
-        // if ($request->search) {
-        //     $query->where('name', 'LIKE', '%' . $request->search . '%')
-        //         ->orWhere('email', 'LIKE', '%' . $request->search . '%');
-        // }
-
         // Search
         if ($request->search) {
             $query->where(function ($q) use ($request) {
@@ -26,7 +20,6 @@ class EmployeeController extends Controller
         }
 
         // 📄 Pagination
-        // $employees = $query->paginate(5);
         $employees = $query->latest()
                            ->paginate(8)
                            ->withQueryString();
@@ -61,9 +54,6 @@ class EmployeeController extends Controller
 
         // ✅ Save to database
         Employee::create($data);
-
-        // Employee::create($request->all());
-
         return redirect()->route('employees.index')->with('success', 'Employee added!');
     }
 
@@ -111,7 +101,6 @@ class EmployeeController extends Controller
     // search function
     public function name_search(Request $request)
     {
-        // $search = $request->search;
         $employees = Employee::query();
 
         if ($request->filled('search')) {
@@ -124,10 +113,6 @@ class EmployeeController extends Controller
         $employees = $employees->orderBy('id', 'desc') //keep consistent order
             ->paginate(10)
              ->withQueryString();
-
-        // $employees = Employee::where('name', 'like', '%' . $search . '%')
-        //             ->paginate(10)
-                    // ->withQueryString();
 
         return view('employees.index', compact('employees'));
     }
