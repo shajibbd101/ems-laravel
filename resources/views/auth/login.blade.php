@@ -45,11 +45,11 @@
             </x-primary-button>
         </div>
 
-        <div class="mt-4 text-center">
+        <!-- <div class="mt-4 text-center">
                 <span>Don't have an account?</span>
                 <a href="{{ route('register') }}" class="text-blue-600 hover:underline">
                     <b>Register here</b>
                 </a>
-        </div>
+        </div> -->
     </form>
 </x-guest-layout>

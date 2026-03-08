@@ -19,7 +19,7 @@
         <!-- Sidebar -->
         <div style="width:200px; background:#333; color:white; min-height:100vh; padding:20px;">
             <h3>EMS</h3>
-            <a href="/dashboard" style="color:white;display:block;margin:10px 0;">Dashboard</a>
+            <!-- <a href="/dashboard" style="color:white;display:block;margin:10px 0;">Dashboard</a> -->
             <a href="/employees" style="color:white;display:block;margin:10px 0;">Employees</a>
             <a href="/leaves" style="color:white;display:block;margin:10px 0;">Leaves</a>
             <a href="/overtimes" style="color:white;display:block;margin:10px 0;">Overtimes</a>
