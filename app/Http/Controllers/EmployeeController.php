@@ -28,7 +28,7 @@ class EmployeeController extends Controller
         // 📄 Pagination
         // $employees = $query->paginate(5);
         $employees = $query->latest()
-                           ->paginate(5)
+                           ->paginate(8)
                            ->withQueryString();
 
         return view('employees.index', compact('employees'));

@@ -23,7 +23,7 @@
             </button>
         </form>
         <!-- 📅 RIGHT: Month Filter (new feature) -->
-        <form action="{{ route('overtimes.month') }}" method="GET" class="flex gap-2">
+        <form action="{{ route('overtimes.index') }}" method="GET" class="flex gap-2">
             <input type="month" name="month"
                 class="border rounded-lg px-4 py-2">
              <button type="submit"
@@ -45,6 +45,8 @@
                     <th class="p-3 text-center">Name</th>
                     <th class="p-3 text-center">Type</th>
                     <th class="p-3 text-center">Date</th>
+                    <th class="p-3 text-center">TotalOnDay</th>
+                    <th class="p-3 text-center">TotalOffDay</th>
                     <th class="p-3 text-center">Action</th>
                 </tr>
             </thead>
@@ -60,6 +62,12 @@
                         </span>
                     </td>
                     <td class="p-3 text-center">{{ $ot->date }}</td>
+                    <td class="p-3 text-center">
+                        {{ $monthlyTotals[$ot->employee_id]->total_on ?? 0 }}
+                    </td>
+                     <td class="p-3 text-center">
+                        {{ $monthlyTotals[$ot->employee_id]->total_off ?? 0 }}
+                    </td>
                     <td class="p-3 text-center">
                         <a href="{{ route('overtimes.edit', $ot->id) }}" class="text-blue-600 hover:underline">Edit</a>
                         |

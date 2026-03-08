@@ -74,7 +74,7 @@ Route::middleware(['auth'])->group(function () {
     /*
     | Overtimes
     */
-    Route::get('overtimes/search', [OvertimeController::class, 'name_search'])
+    Route::get('overtimes/search', [OvertimeController::class, 'index'])
         ->name('overtimes.search');
     Route::get('overtimes/month', [OvertimeController::class, 'month'])
         ->name('overtimes.month');
