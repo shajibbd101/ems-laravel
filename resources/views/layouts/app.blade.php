@@ -21,8 +21,9 @@
             <h3>EMS</h3>
             <a href="/dashboard" style="color:white;display:block;margin:10px 0;">Dashboard</a>
             <a href="/employees" style="color:white;display:block;margin:10px 0;">Employees</a>
-            <a href="/overtimes" style="color:white;display:block;margin:10px 0;">Overtimes</a>
             <a href="/leaves" style="color:white;display:block;margin:10px 0;">Leaves</a>
+            <a href="/overtimes" style="color:white;display:block;margin:10px 0;">Overtimes</a>
+            <a href="{{ route('overtimes.summary') }}" style="color:white;display:block;margin:10px 0;">Overtime Summary</a>
            <form method="POST" action="{{ route('logout') }}" style="margin-top:10px;">
                 @csrf
                 <button type="submit" style="color:white; background:none; border:none; cursor:pointer;">

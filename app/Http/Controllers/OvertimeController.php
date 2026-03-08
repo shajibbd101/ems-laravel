@@ -116,38 +116,50 @@ class OvertimeController extends Controller
         return redirect()->route('overtimes.index')->with('success', 'Deleted!');
     }
 
-    // search function
-    // public function name_search(Request $request)
-    // {
-    //     $overtimes = Overtime::with('employee')
-    //         ->when($request->filled('search'), function ($query) use ($request) {
-    //             $query->whereHas('employee', function ($q) use ($request) {
-    //                 $q->where('name', 'like', '%' . $request->search . '%');
-    //             });
-    //         })
-    //         ->orderBy('id', 'desc')  // keep consistent ordering
-    //         ->paginate(10)
-    //         ->withQueryString();
+    //overtime summary
 
-    //     return view('overtimes.index', compact('overtimes'));
-    // }
-    // end
+    public function summary(Request $request)
+    {
+        // $month = $request->filled('month')
+        //     ? Carbon::parse($request->month)
+        //     : now();
 
-    // add month filter
-    // public function month(Request $request)
-    // {
-    //     $query = Overtime::with('employee');
+        // $summary = Overtime::selectRaw("
+        //         employee_id,
+        //         SUM(CASE WHEN type = 'OnDay' THEN 1 ELSE 0 END) as total_on,
+        //         SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off
+        //     ")
+        //     ->whereYear('date', $month->year)
+        //     ->whereMonth('date', $month->month)
+        //     ->groupBy('employee_id')
+        //     ->with('employee')
+        //     ->get();
 
-    //     if ($request->filled('month')) {
-    //         $month = Carbon::parse($request->month);
+        // return view('overtimes.summary', compact('summary', 'month'));
 
-    //         $query->whereYear('date', $month->year)
-    //             ->whereMonth('date', $month->month);
-    //     }
+        $month = $request->filled('month')
+                ? Carbon::parse($request->month)
+                : now();
 
-    //     $overtimes = $query->get();
+            $query = Overtime::selectRaw("
+                    employee_id,
+                    SUM(CASE WHEN type = 'OnDay' THEN 1 ELSE 0 END) as total_on,
+                    SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off
+                ")
+                ->whereYear('date', $month->year)
+                ->whereMonth('date', $month->month)
+                ->groupBy('employee_id')
+                ->with('employee');
 
-    //     return view('overtimes.index', compact('overtimes'));
-    // }
-    // end month filter
+            // 🔍 Search by employee name
+            if ($request->filled('search')) {
+                $query->whereHas('employee', function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            $summary = $query->paginate(5)->withQueryString();
+
+            return view('overtimes.summary', compact('summary', 'month'));
+    }
 }

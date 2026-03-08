@@ -95,4 +95,11 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
+//Overtime Summary
+
+Route::get('/overtime-summary', [OvertimeController::class, 'summary'])
+    ->name('overtimes.summary');
+
+//End Overtime Summary
+
 require __DIR__.'/auth.php';
