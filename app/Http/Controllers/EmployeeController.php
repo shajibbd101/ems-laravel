@@ -111,9 +111,23 @@ class EmployeeController extends Controller
     // search function
     public function name_search(Request $request)
     {
-        $search = $request->search;
+        // $search = $request->search;
+        $employees = Employee::query();
 
-        $employees = Employee::where('name', 'like', '%' . $search . '%')->get();
+        if ($request->filled('search')) {
+            $employees->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('phone', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $employees = $employees->orderBy('id', 'desc') //keep consistent order
+            ->paginate(10)
+             ->withQueryString();
+
+        // $employees = Employee::where('name', 'like', '%' . $search . '%')
+        //             ->paginate(10)
+                    // ->withQueryString();
 
         return view('employees.index', compact('employees'));
     }

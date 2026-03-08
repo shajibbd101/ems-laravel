@@ -111,13 +111,17 @@ class OvertimeController extends Controller
     // search function
     public function name_search(Request $request)
     {
-        $search = $request->search;
+        // $search = $request->search;
 
         $overtimes = Overtime::with('employee')
-            ->whereHas('employee', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $query->whereHas('employee', function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%');
+                });
             })
-            ->get();
+            ->orderBy('id', 'desc')  // keep consistent ordering
+            ->paginate(10)
+            ->withQueryString();
 
         return view('overtimes.index', compact('overtimes'));
     }
