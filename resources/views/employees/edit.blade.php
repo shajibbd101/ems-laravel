@@ -5,17 +5,16 @@
     <img src="{{ asset('storage/'.$employee->photo) }}" width="100"><br><br>
 @endif
 
-    <br>
     <h2 class="text-3xl font-bold mb-6 text-gray-800 text-center">Edit Employee</h2>
     <form method="POST" action="{{ route('employees.update', $employee->id) }}"
-          class="bg-white p-6 rounded-lg shadow space-y-4">
+          class="bg-white p-2 rounded-lg shadow space-y-2">
         @csrf
         @method('PUT')
 
         <div>
             <label class="block mb-1 font-medium">Name</label>
             <input type="text" name="name" value="{{ $employee->name }}"
-                   class="w-full border rounded p-2">               
+                   class="w-full border rounded p-2" required>               
         </div>
 
         <div>
@@ -27,7 +26,7 @@
         <div>
             <label class="block mb-1 font-medium">Phone</label>
             <input type="text" name="phone" value="{{ $employee->phone }}"
-                   class="w-full border rounded p-2">
+                   class="w-full border rounded p-2" required>
         </div>
 
         <div>
@@ -63,5 +62,18 @@
         </div>
     </form>
 </div>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- error messages -->
+@if ($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: '{{ $errors->first() }}',
+    });
+</script>
+@endif
+<!-- end SweetAlert2 -->
 </x-app-layout>

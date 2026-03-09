@@ -25,20 +25,7 @@
     @else
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <!-- <div class="mt-8 bg-white p-2 rounded-xl shadow flex justify-between items-center"> -->
-
-                <!-- <div class="text-sm text-gray-500">
-                    Showing 
-                    <span class="font-semibold">{{ $employees->firstItem() }}</span>
-                    to 
-                    <span class="font-semibold">{{ $employees->lastItem() }}</span>
-                    of 
-                    <span class="font-semibold">{{ $employees->total() }}</span>
-                    results
-                </div> -->
-
-                
+        <table class="w-full text-left border-collapse">    
 
             <!-- </div> -->
 
@@ -74,14 +61,19 @@
                     <td class="p-3 text-center">
                         <a href="{{ route('employees.edit', $employee->id) }}" class="text-blue-600 hover:underline">Edit</a>
                         |
-                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline;">
+                        <form id="delete-form-{{ $employee->id }}" 
+                            action="{{ route('employees.destroy', $employee->id) }}" 
+                            method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                            <button type="button"
+                                    onclick="confirmDelete({{ $employee->id }})"
+                                    class="text-red-600 hover:underline">Delete</button>
                         </form>
                     </td>
                 </tr>
                 @endforeach
+                    
             </tbody>
         </table>
     </div>
@@ -91,4 +83,42 @@
     </div>
 </div>
 @endif
+
+<!-- sweetalert popup for delete confirmation -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- success messages -->
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{ session('success') }}",
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
+
+<!-- sweetalert confirmation delete -->
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This employee will be permanently deleted!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
+<!-- end delete confirmation -->
+
 </x-app-layout>

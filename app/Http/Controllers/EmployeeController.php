@@ -37,7 +37,7 @@ class EmployeeController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'nullable|email|unique:employees',
-            'phone' => 'required|unique:employees',
+            'phone' => 'required|numeric|unique:employees',
             'designation' => 'required',
             'salary' => 'nullable|numeric',
             'joining_date' => 'nullable|date',
@@ -54,7 +54,7 @@ class EmployeeController extends Controller
 
         // ✅ Save to database
         Employee::create($data);
-        return redirect()->route('employees.index')->with('success', 'Employee added!');
+        return redirect()->route('employees.index')->with('success', 'Employee added successfully!');
     }
 
     public function edit(Employee $employee)
@@ -67,7 +67,7 @@ class EmployeeController extends Controller
             $request->validate([
                 'name' => 'required',
                 'email' => 'nullable|email|unique:employees,email,' . $employee->id,
-                'phone' => 'required|unique:employees,phone,' . $employee->id,
+                'phone' => 'required|numeric|unique:employees,phone,' . $employee->id,
                 'designation' => 'required',
                 'salary' => 'nullable|numeric',
                 'joining_date' => 'nullable|date',
@@ -89,13 +89,13 @@ class EmployeeController extends Controller
 
             $employee->update($data);
 
-            return redirect()->route('employees.index')->with('success', 'Employee updated!');
+            return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
     }
 
     public function destroy(Employee $employee)
     {
         $employee->delete();
-        return redirect()->route('employees.index');
+        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully!');
     }
 
     // search function

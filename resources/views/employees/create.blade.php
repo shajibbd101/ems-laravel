@@ -1,15 +1,16 @@
 <x-app-layout>
 
 <div class="max-w-xl mx-auto py-8">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">Add Employee</h2>
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Add Employee</h2>
 
     <form method="POST" action="{{ route('employees.store') }}"
-          class="bg-white p-6 rounded-lg shadow space-y-4">
+          class="bg-white p-2 rounded-lg shadow space-y-2">
         @csrf
 
         <div>
             <label class="block mb-1 font-medium">Name</label>
-            <input type="text" name="name" value="{{ old('name') }}" class="w-full border rounded p-2">
+            <input type="text" name="name" value="{{ old('name') }}" 
+            class="w-full border rounded p-2" required>
             @error('name')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
@@ -22,10 +23,8 @@
 
         <div>
             <label class="block mb-1 font-medium">Phone</label>
-            <input type="text" name="phone" value="{{ old('phone') }}" class="w-full border rounded p-2">
-            @error('phone')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+            <input type="text" name="phone" value="{{ old('phone') }}" 
+                    class="w-full border rounded p-2" required>
         </div>
 
         <!-- add -->
@@ -61,5 +60,18 @@
         </div>
     </form>
 </div>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- error messages -->
+@if ($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: '{{ $errors->first() }}',
+    });
+</script>
+@endif
+<!-- end SweetAlert2 -->
 </x-app-layout>
