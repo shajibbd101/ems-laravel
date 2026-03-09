@@ -53,7 +53,7 @@ class LeaveController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('leaves.index');
+        return redirect()->route('leaves.index')->with('success', 'Leave added successfully!');
     }
 
     // Edit and Update methods would go here
@@ -81,7 +81,7 @@ class LeaveController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('leaves.index');
+        return redirect()->route('leaves.index')->with('success', 'Leave updated successfully!');
     }
 
     // Destroy method would go here
@@ -91,7 +91,7 @@ class LeaveController extends Controller
         $leave = Leave::findOrFail($id);
         $leave->delete();
 
-        return redirect()->route('leaves.index');
+        return redirect()->route('leaves.index')->with('success', 'Leave deleted successfully!');
     }
 
     // use name box fo search name (overtime & Leave)
@@ -110,18 +110,6 @@ class LeaveController extends Controller
      // search function
     public function name_search(Request $request)
     {
-        // $search = $request->search;
-
-        // $leaves = Leave::with('employee')
-        //     ->when($request->filled, function ($query) use ($search) {
-        //         $query->whereHas('employee', function ($q) use ($search) {
-        //             $q->where('name', 'like', '%' . $search . '%');
-        //         });
-        //     })
-        //     ->paginate(10)
-        //     ->withQueryString();
-
-        // return view('leaves.index', compact('leaves'));
 
          $leaves = Leave::with('employee')
             ->when($request->filled('search'), function ($query) use ($request) {

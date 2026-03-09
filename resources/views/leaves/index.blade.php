@@ -52,10 +52,14 @@
                     <td class="p-3 text-center">
                         <a href="{{ route('leaves.edit', $leave->id) }}" class="text-blue-600 hover:underline">Edit</a>
                         |
-                        <form action="{{ route('leaves.destroy', $leave->id) }}" method="POST" style="display:inline;">
+                        <form id="delete-form-{{ $leave->id }}"
+                            action="{{ route('leaves.destroy', $leave->id) }}" 
+                            method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                            <button type="button" 
+                                    onclick="confirmDelete({{ $leave->id }})"
+                                    class="text-red-600 hover:underline">Delete</button>
                         </form>
                     </td>
                 </tr>
@@ -68,5 +72,41 @@
          {{ $leaves->onEachSide(1)->links() }}
     </div>
 </div>
+<!-- sweetalert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- success messages -->
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{ session('success') }}",
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
+
+<!-- sweetalert confirmation delete -->
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This employee will be permanently deleted!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
+<!-- end delete confirmation -->
 
 </x-app-layout>

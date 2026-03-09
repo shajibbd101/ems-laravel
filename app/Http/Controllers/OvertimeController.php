@@ -79,7 +79,7 @@ class OvertimeController extends Controller
             'date' => $request->date,
         ]);
 
-        return redirect()->route('overtimes.index');
+        return redirect()->route('overtimes.index')->with('success', 'Overtime added successfully!');
     }
 
     // Edit 
@@ -103,7 +103,7 @@ class OvertimeController extends Controller
             'date' => $request->date,
         ]);
 
-        return redirect()->route('overtimes.index')->with('success', 'Updated!');
+        return redirect()->route('overtimes.index')->with('success', 'Overtime updated successfully!');
     }
 
     // Delete
@@ -113,7 +113,7 @@ class OvertimeController extends Controller
         $overtime = Overtime::findOrFail($id);
         $overtime->delete();
 
-        return redirect()->route('overtimes.index')->with('success', 'Deleted!');
+        return redirect()->route('overtimes.index')->with('success', 'Overtime deleted successfully!');
     }
 
     //overtime summary
