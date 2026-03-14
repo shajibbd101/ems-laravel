@@ -34,11 +34,13 @@
     </div>
     <!-- add export pdf/excell button -->
     <div class="flex justify-end mb-4 gap-2">
-        <a href="{{ route('export.data', ['type' => 'overtimes', 'format' => 'pdf']) }}"
+        <a href="{{ route('export.data', ['type' => 'overtimes', 'format' => 'pdf']) }}
+                ?search={{ request('search') }}&month={{ request('month') }}"
             class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
             Export PDF
         </a>
-        <a href="{{ route('export.data', ['type' => 'overtimes', 'format' => 'excel']) }}"
+        <a href="{{ route('export.data', ['type' => 'overtimes', 'format' => 'excel']) }}
+                ?search={{ request('search') }}&month={{ request('month') }}"
             class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 ml-2">
             Export Excel
         </a>

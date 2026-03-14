@@ -36,11 +36,13 @@
 
         <!-- add export button -->
         <div class="flex justify-end gap-2">
-            <a href="{{ route('export.data', ['type' => 'overtime-summary', 'format' => 'pdf']) }}"
+            <a href="{{ route('export.data', ['type' => 'overtime-summary', 'format' => 'pdf']) }}
+                    ?search={{ request('search') }}&month={{ request('month') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
                 Export PDF
             </a>
-            <a href="{{ route('export.data', ['type' => 'overtime-summary', 'format' => 'excel']) }}"
+            <a href="{{ route('export.data', ['type' => 'overtime-summary', 'format' => 'excel']) }}
+                    ?search={{ request('search') }}&month={{ request('month') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 ml-2">
                 Export Excel
             </a>
@@ -62,7 +64,7 @@
             <tbody>
                 @forelse($summary as $row)
                 <tr class="border-t hover:bg-gray-50">
-                    <td class="p-1 font-semibold">
+                    <td class="p-1 text-center">
                         {{ $row->employee->name }}
                     </td>
                     <td class="p-1 text-green-600 font-bold">

@@ -93,8 +93,8 @@
                     <td>{{ $row->employee->name ?? '' }}</td>
                     <td>{{ $row->type }}</td>
                     <td>{{ $row->date }}</td>
-                    <td>{{ $row->total_on_day }}</td>
-                    <td>{{ $row->total_off_day }}</td>
+                    <td>{{ $row->type == 'OnDay' ? 1 : 0 }}</td>
+                    <td>{{ $row->type == 'OffDay' ? 1 : 0 }}</td>
                 @endif
 
             </tr>

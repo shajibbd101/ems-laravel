@@ -120,22 +120,6 @@ class OvertimeController extends Controller
 
     public function summary(Request $request)
     {
-        // $month = $request->filled('month')
-        //     ? Carbon::parse($request->month)
-        //     : now();
-
-        // $summary = Overtime::selectRaw("
-        //         employee_id,
-        //         SUM(CASE WHEN type = 'OnDay' THEN 1 ELSE 0 END) as total_on,
-        //         SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off
-        //     ")
-        //     ->whereYear('date', $month->year)
-        //     ->whereMonth('date', $month->month)
-        //     ->groupBy('employee_id')
-        //     ->with('employee')
-        //     ->get();
-
-        // return view('overtimes.summary', compact('summary', 'month'));
 
         $month = $request->filled('month')
                 ? Carbon::parse($request->month)
