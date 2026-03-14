@@ -49,10 +49,10 @@
                    class="w-full border rounded p-2">
         </div>
 
-        <div>
+        <!-- <div>
             <label class="block mb-1 font-medium">Photo</label>
             <input type="file" name="photo" class="w-full border rounded p-2">
-        </div>
+        </div> -->
         <br>
         <div>
             <button type="submit"

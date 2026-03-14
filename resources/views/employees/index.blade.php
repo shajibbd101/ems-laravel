@@ -2,24 +2,39 @@
 
 <div class="max-w-7xl mx-auto py-8 px-4">
     
-    <div class="flex justify-between items-center mb-6">
-        <br><br><br>
+    <div class="flex justify-between items-center mb-4">
+        <br>
         <h2 class="text-3xl font-bold text-gray-800 text-center">Employee List</h2>
         <a href="{{ route('employees.create') }}"
            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-            + Add Employee
+            Add Employee
         </a>
     </div>
 
-    <!-- add Search Option -->
+        
     <div class="flex justify-between items-center mb-4">
+        
+        <!-- add Search Option -->
         <form action="{{ route('employees.search') }}" method="GET" class="flex gap-2">
             <input type="search" name="search" value="{{ request('search') }}" placeholder="Enter name" class="border rounded-lg px-4 py-2">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Search</button>
         </form>
-    </div>
-     <!-- end Search Option -->
 
+        <!-- end Search Option -->
+
+        <!-- add export button -->
+        <div class="flex justify-end mb-2 gap-2">
+            <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'pdf']) }}"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
+                Export PDF
+            </a>
+            <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'excel']) }}"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 ml-2">
+                Export Excel
+            </a>
+        </div>
+        <!-- end export button -->
+    </div>
     @if($employees->isEmpty())
         <p>No employees found</p>
     @else
@@ -32,33 +47,24 @@
             <thead class="bg-gray-100">
                 <tr>
                     <!-- <th class="p-3 text-center">ID</th> -->
-                    <th class="p-3 text-center">Name</th>
-                    <th class="p-3 text-center">Photo</th>
-                    <th class="p-3 text-center">Email</th>
-                    <th class="p-3 text-center">Phone</th>
-                    <th class="p-3 text-center">Designation</th>
-                    <th class="p-3 text-center">Salary</th>
-                    <th class="p-3 text-center">Action</th>
+                    <th class="p-2 text-center">Name</th>
+                    <th class="p-2 text-center">Email</th>
+                    <th class="p-2 text-center">Phone</th>
+                    <th class="p-2 text-center">Designation</th>
+                    <th class="p-2 text-center">Salary</th>
+                    <th class="p-2 text-center">Action</th>
                 </tr>
             </thead>
             
             <tbody>
                 @foreach($employees as $employee)
                 <tr class="border-t hover:bg-gray-50">
-                    <!-- <td class="p-3 text-center">{{ $employee->id }}</td> -->
-                    <td class="p-3 text-center">{{ $employee->name }}</td>
-                    <td class="p-3 text-center">
-                        @if($employee->photo)
-                            <img src="{{ asset('storage/'.$employee->photo) }}" width="60" height="60">
-                        @else
-                            No Photo
-                        @endif
-                    </td>
-                    <td class="p-3 text-center">{{ $employee->email }}</td>
-                    <td class="p-3 text-center">{{ $employee->phone }}</td>
-                    <td class="p-3 text-center">{{ $employee->designation }}</td>
-                    <td class="p-3 text-center">{{ $employee->salary }}</td>
-                    <td class="p-3 text-center">
+                    <td class="p-1 text-center">{{ $employee->name }}</td>
+                    <td class="p-1 text-center">{{ $employee->email }}</td>
+                    <td class="p-1 text-center">{{ $employee->phone }}</td>
+                    <td class="p-1 text-center">{{ $employee->designation }}</td>
+                    <td class="p-1 text-center">{{ $employee->salary }}</td>
+                    <td class="p-1 text-center">
                         <a href="{{ route('employees.edit', $employee->id) }}" class="text-blue-600 hover:underline">Edit</a>
                         |
                         <form id="delete-form-{{ $employee->id }}" 

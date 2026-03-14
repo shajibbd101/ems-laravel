@@ -21,7 +21,7 @@ class LeaveController extends Controller
         }
 
         $leaves = $query->latest()
-                           ->paginate(8)
+                           ->paginate(16)
                            ->withQueryString();
 
         return view('leaves.index', compact('leaves'));
@@ -118,7 +118,7 @@ class LeaveController extends Controller
                 });
             })
             ->orderBy('id', 'desc')   // ✅ keep consistent order
-            ->paginate(10)
+            ->paginate(16)
             ->withQueryString();
 
         return view('leaves.index', compact('leaves'));

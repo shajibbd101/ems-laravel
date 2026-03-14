@@ -21,7 +21,7 @@ class EmployeeController extends Controller
 
         // 📄 Pagination
         $employees = $query->latest()
-                           ->paginate(8)
+                           ->paginate(16)
                            ->withQueryString();
 
         return view('employees.index', compact('employees'));
@@ -41,16 +41,16 @@ class EmployeeController extends Controller
             'designation' => 'required',
             'salary' => 'nullable|numeric',
             'joining_date' => 'nullable|date',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            // 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         // ✅ Get all data
         $data = $request->all();
 
         // ✅ Handle file upload
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
-        }
+        // if ($request->hasFile('photo')) {
+        //     $data['photo'] = $request->file('photo')->store('photos', 'public');
+        // }
 
         // ✅ Save to database
         Employee::create($data);
@@ -71,21 +71,21 @@ class EmployeeController extends Controller
                 'designation' => 'required',
                 'salary' => 'nullable|numeric',
                 'joining_date' => 'nullable|date',
-                'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+                // 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
             ]);
 
             $data = $request->all();
 
             // ✅ Delete old photo
-            if ($request->hasFile('photo')) {
+            // if ($request->hasFile('photo')) {
 
-                if ($employee->photo && file_exists(storage_path('app/public/' . $employee->photo))) {
-                    unlink(storage_path('app/public/' . $employee->photo));
-                }
+            //     if ($employee->photo && file_exists(storage_path('app/public/' . $employee->photo))) {
+            //         unlink(storage_path('app/public/' . $employee->photo));
+            //     }
 
-                // ✅ Upload new photo
-                $data['photo'] = $request->file('photo')->store('photos', 'public');
-            }
+            //     // ✅ Upload new photo
+            //     $data['photo'] = $request->file('photo')->store('photos', 'public');
+            // }
 
             $employee->update($data);
 
@@ -111,7 +111,7 @@ class EmployeeController extends Controller
         }
 
         $employees = $employees->orderBy('id', 'desc') //keep consistent order
-            ->paginate(10)
+            ->paginate(16)
              ->withQueryString();
 
         return view('employees.index', compact('employees'));

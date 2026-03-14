@@ -4,10 +4,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\OvertimeController;
+use App\Http\Controllers\ExportController;
+use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Overtime;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -101,5 +103,10 @@ Route::get('/overtime-summary', [OvertimeController::class, 'summary'])
     ->name('overtimes.summary');
 
 //End Overtime Summary
+
+//export routes
+Route::get('/export/{type}/{format}', 
+    [ExportController::class, 'export']
+)->name('export.data');
 
 require __DIR__.'/auth.php';

@@ -37,7 +37,7 @@ class OvertimeController extends Controller
         }
 
         $overtimes = $query->latest()
-                            ->paginate(8)
+                            ->paginate(15)
                             ->withQueryString();
 
         // Monthly Total Count Per Employee
@@ -158,7 +158,7 @@ class OvertimeController extends Controller
                 });
             }
 
-            $summary = $query->paginate(5)->withQueryString();
+            $summary = $query->paginate(15)->withQueryString();
 
             return view('overtimes.summary', compact('summary', 'month'));
     }

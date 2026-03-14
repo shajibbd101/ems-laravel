@@ -46,11 +46,12 @@
             <label class="block mb-1 font-medium">Joining Date</label>
             <input type="date" name="joining_date" class="w-full border rounded p-2">
         </div>
+        <br>
 
-        <div>
+        <!-- <div>
             <label class="block mb-1 font-medium">Photo</label>
             <input type="file" name="photo" class="w-full border rounded p-2">
-        </div>
+        </div> -->
 
         <div>
             <button type="submit"
