@@ -22,7 +22,27 @@ class ExportController extends Controller
                 break;
 
             case 'leaves':
-                $data = Leave::all();
+                // $data = Leave::all();
+                // break;
+                $query = Leave::with('employee');
+
+                // Search filter
+                if ($request->filled('search')) {
+                    $query->whereHas('employee', function ($q) use ($request) {
+                        $q->where('name', 'like', '%' . $request->search . '%')
+                        ->orWhere('phone', 'like', '%' . $request->search . '%');
+                    });
+                }
+
+                // Month filter
+                if ($request->filled('month')) {
+                    $month = \Carbon\Carbon::parse($request->month);
+                    $query->whereYear('from_date', $month->year)
+                        ->whereMonth('from_date', $month->month);
+                }
+
+                $data = $query->latest()->get();
+
                 break;
 
             case 'overtimes':
@@ -47,6 +67,35 @@ class ExportController extends Controller
 
                 break;
 
+            case 'leave-summary':
+
+                $query = Leave::join('employees', 'employees.id', '=', 'leaves.employee_id')
+                    ->selectRaw("
+                        employees.id as employee_id,
+                        employees.name as employee_name,
+                        SUM(CASE WHEN leaves.type = 'CL' THEN 1 ELSE 0 END) as CL,
+                        SUM(CASE WHEN leaves.type = 'ML' THEN 1 ELSE 0 END) as ML,
+                        SUM(CASE WHEN leaves.type = 'RL' THEN 1 ELSE 0 END) as RL
+                    ")
+                    ->groupBy('employees.id', 'employees.name');
+
+                // 🔍 Search filter
+                if ($request->filled('search')) {
+                    $query->where('employees.name', 'like', '%' . $request->search . '%');
+                }
+
+                // 📅 Month filter (use SAME date column)
+                if ($request->filled('month')) {
+                    $month = \Carbon\Carbon::parse($request->month);
+
+                    $query->whereYear('leaves.from_date', $month->year)
+                        ->whereMonth('leaves.from_date', $month->month);
+                }
+
+                $data = $query->get();
+
+                break;
+
             case 'overtime-summary':
                 
                 $data = $this->getOvertimeSummary($request);
@@ -57,6 +106,12 @@ class ExportController extends Controller
         }
 
         if ($format == 'pdf') {
+
+            //Leave summary
+            if ($type == 'leave-summary') {
+                $pdf = PDF::loadView('exports.leave-summary-pdf', compact('data'));
+                return $pdf->download('leave-summary.pdf');
+            }
 
             //overtime summary
             if ($type == 'overtime-summary') {

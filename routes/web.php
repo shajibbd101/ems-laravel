@@ -104,6 +104,12 @@ Route::get('/overtime-summary', [OvertimeController::class, 'summary'])
 
 //End Overtime Summary
 
+//leave summary
+Route::get('/leave-summary', [LeaveController::class, 'summary'])
+    ->name('leaves.summary');
+
+//end leave summary
+
 //export routes
 Route::get('/export/{type}/{format}', 
     [ExportController::class, 'export']

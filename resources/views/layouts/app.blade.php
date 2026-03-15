@@ -22,6 +22,7 @@
             <!-- <a href="/dashboard" style="color:white;display:block;margin:10px 0;">Dashboard</a> -->
             <a href="/employees" style="color:white;display:block;margin:10px 0;">Employees</a>
             <a href="/leaves" style="color:white;display:block;margin:10px 0;">Leaves</a>
+            <a href="{{ route('leaves.summary') }}" style="color:white;display:block;margin:10px 0;">Leave Summary</a>
             <a href="/overtimes" style="color:white;display:block;margin:10px 0;">Overtimes</a>
             <a href="{{ route('overtimes.summary') }}" style="color:white;display:block;margin:10px 0;">Overtime Summary</a>
            <form method="POST" action="{{ route('logout') }}" style="margin-top:10px;">

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>overtime Summary Report</title>
+    <title>Leave Summary Report</title>
 
     <style>
         body {
@@ -37,17 +37,18 @@
 
 <body>
 
-<h2>Overtime Summary Report</h2>
+<h2>Leave Summary Report</h2>
 
 <table>
     <thead>
         <tr>
 
-            {{-- Overtime Columns --}}
-            ($type == 'overtime Summary')
+            {{-- Leave Columns --}}
+            ($type == 'leave Summary')
                 <th>Name</th>
-                <th>Total OnDay</th>
-                <th>Total OffDay</th>
+                <th>CL</th>
+                <th>ML</th>
+                <th>RL</th>
 
         </tr>
     </thead>
@@ -56,11 +57,12 @@
         @foreach($data as $row)
             <tr>
 
-                {{-- Overtime Summary Data --}}
-                ($type == 'overtimes Summary')
+                {{-- Leave Summary Data --}}
+                ($type == 'leaves Summary')
                     <td>{{ $row->employee_name }}</td>
-                    <td>{{ $row->total_on_day }}</td>
-                    <td>{{ $row->total_off_day }}</td>
+                    <td>{{ $row->CL }}</td>
+                    <td>{{ $row->ML }}</td>
+                    <td>{{ $row->RL }}</td>
 
             </tr>
         @endforeach

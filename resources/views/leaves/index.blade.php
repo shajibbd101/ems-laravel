@@ -13,27 +13,39 @@
 
      <!-- add Search Option -->
     <div class="flex justify-between items-center mb-4">
+         <!-- 🔍 LEFT: Name Search (existing feature) -->
         <form action="{{ route('leaves.search') }}" method="GET" class="flex gap-2">
             <input type="search" name="search" value="{{ request('search') }}" placeholder="Enter name"
                  class="border rounded-lg px-4 py-2">
             <button type="submit"
                  class="bg-blue-600 text-white px-4 py-2 rounded-lg">Search</button>
         </form>
+        <!-- 📅 RIGHT: Month Filter (new feature) -->
+        <form action="{{ route('leaves.index') }}" method="GET" class="flex gap-2">
+            <input type="month" name="month"
+                class="border rounded-lg px-4 py-2">
+             <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                Month
+            </button>
+        </form>   
+    </div>
+     <!-- end Search Option -->
 
-        <!-- add export button -->
-        <div class="flex justify-end gap-2">
-            <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'pdf']) }}"
+     <!-- add export button -->
+        <div class="flex justify-end mb-4 gap-2">
+            <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'pdf']) }}
+                    ?search={{ request('search') }}&month={{ request('month') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
                 Export PDF
             </a>
-            <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'excel']) }}"
+            <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'excel']) }}
+                    ?search={{ request('search') }}&month={{ request('month') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 ml-2">
                 Export Excel
             </a>
         </div>
         <!-- end export button -->
-    </div>
-     <!-- end Search Option -->
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <table class="w-full text-left border-collapse">
