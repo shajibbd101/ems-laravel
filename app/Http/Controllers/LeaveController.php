@@ -35,7 +35,7 @@ class LeaveController extends Controller
         }
 
         $leaves = $query->latest()
-                           ->paginate(15)
+                           ->paginate(16)
                            ->withQueryString();
 
         return view('leaves.index', compact('leaves'));

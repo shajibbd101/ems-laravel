@@ -18,12 +18,18 @@ class ExportController extends Controller
         switch ($type) {
 
             case 'employees':
-                $data = Employee::all();
+
+                $query = Employee::query();
+                // Search filter
+                if ($request->filled('search')) {
+                    $query->where('name', 'like', '%' . $request->search . '%')
+                        ->orWhere('phone', 'like', '%' . $request->search . '%');
+                }
+                $data = $query->latest()->get();
                 break;
 
             case 'leaves':
-                // $data = Leave::all();
-                // break;
+            
                 $query = Leave::with('employee');
 
                 // Search filter
@@ -47,7 +53,6 @@ class ExportController extends Controller
 
             case 'overtimes':
 
-                // break;
                 $query = Overtime::with('employee');
 
                 // Optional: apply same filters if needed
@@ -129,24 +134,77 @@ class ExportController extends Controller
 
         if ($format == 'excel') {
 
-            //overtime summary excell
-            if ($type == 'overtime-summary') {
-                return Excel::download(
-                    new GenericExport(
-                        $data->map(function ($item) {
-                            return [
-                                'Employee Name' => $item->employee_name,
-                                'Total OnDay'   => $item->total_on_day,
-                                'Total OffDay'  => $item->total_off_day,
-                            ];
-                        })
-                    ),
-                    'overtime-summary.xlsx'
-                );
-            }
-            //other exports excell 
+            //Employee
+            if ($type == 'employees') {
+                $excelData = $data->map(function ($item) {
+                    return [
+                        'Name' => $item->name,
+                        'Email' => $item->email,
+                        'Phone' => $item->phone,
+                        'Designation' => $item->designation,
+                        'Salary' => $item->salary,
+                        'Joining Date' => $item->joining_date,
+                    ];
+                });
 
-            return Excel::download(new GenericExport($data), $type . '.xlsx');
+                return Excel::download(new GenericExport($excelData), 'employees.xlsx');
+            }
+
+            //Leave
+            if ($type == 'leaves') {
+                $excelData = $data->map(function ($item) {
+                    return [
+                        'Employee Name' => $item->employee->name ?? '',
+                        'Leave Type' => $item->type,
+                        'Start Date' => $item->from_date,
+                        'End Date' => $item->to_date,
+                        'Status' => $item->days,
+                    ];
+                });
+
+                return Excel::download(new GenericExport($excelData), 'leaves.xlsx');
+            }
+
+            //Leave summary
+            if ($type == 'leave-summary') {
+                $excelData = $data->map(function ($item) {
+                    return [
+                        'Employee Name' => $item->employee_name,
+                        'CL' => $item->CL,
+                        'ML' => $item->ML,
+                        'RL' => $item->RL,
+                    ];
+                });
+
+                return Excel::download(new GenericExport($excelData), 'leave-summary.xlsx');
+            }
+
+            //Overtime
+            if ($type == 'overtimes') {
+                $excelData = $data->map(function ($item) {
+                    return [
+                        'Employee Name' => $item->employee->name ?? '',
+                        'Type' => $item->type,
+                        'Date' => $item->date,
+                    ];
+                });
+
+                return Excel::download(new GenericExport($excelData), 'overtimes.xlsx');
+            }
+
+            //overtime summary excell
+            
+            if ($type == 'overtime-summary') {
+                $excelData = $data->map(function ($item) {
+                    return [
+                        'Employee Name' => $item->employee_name,
+                        'Total OnDay' => $item->total_on_day,
+                        'Total OffDay' => $item->total_off_day,
+                    ];
+                });
+
+                return Excel::download(new GenericExport($excelData), 'overtime-summary.xlsx');
+            }
         }
 
         abort(404);

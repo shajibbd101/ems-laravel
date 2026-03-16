@@ -37,7 +37,7 @@ class OvertimeController extends Controller
         }
 
         $overtimes = $query->latest()
-                            ->paginate(15)
+                            ->paginate(16)
                             ->withQueryString();
 
         // Monthly Total Count Per Employee

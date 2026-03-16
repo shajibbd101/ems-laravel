@@ -3,7 +3,24 @@
 <div class="max-w-7xl mx-auto py-8 px-4">
 
     <div class="flex justify-between items-center mb-4">
-        <br>
+        
+
+         <!-- add export button -->
+        <div class="flex justify-end mb-4 gap-2">
+            <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'pdf']) }}
+                    ?search={{ request('search') }}&month={{ request('month') }}"
+                class="text-blue-600 hover:underline">
+                PDF
+            </a>
+            |
+            <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'excel']) }}
+                    ?search={{ request('search') }}&month={{ request('month') }}"
+                class="text-blue-600 hover:underline">
+                Excel
+            </a>
+        </div>
+        <!-- end export button -->
+
         <h2 class="text-3xl font-bold text-gray-800">Leave List</h2>
         <a href="{{ route('leaves.create') }}"
            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
@@ -33,18 +50,19 @@
      <!-- end Search Option -->
 
      <!-- add export button -->
-        <div class="flex justify-end mb-4 gap-2">
+        <!-- <div class="flex justify-end mb-4 gap-2">
             <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'pdf']) }}
                     ?search={{ request('search') }}&month={{ request('month') }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-                Export PDF
+                class="text-blue-600 hover:underline">
+                PDF
             </a>
+            |
             <a href="{{ route('export.data', ['type' => 'leaves', 'format' => 'excel']) }}
                     ?search={{ request('search') }}&month={{ request('month') }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 ml-2">
-                Export Excel
+                class="text-blue-600 hover:underline">
+                Excel
             </a>
-        </div>
+        </div> -->
         <!-- end export button -->
 
     <div class="bg-white shadow rounded-lg overflow-hidden">

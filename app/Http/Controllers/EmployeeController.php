@@ -47,11 +47,6 @@ class EmployeeController extends Controller
         // ✅ Get all data
         $data = $request->all();
 
-        // ✅ Handle file upload
-        // if ($request->hasFile('photo')) {
-        //     $data['photo'] = $request->file('photo')->store('photos', 'public');
-        // }
-
         // ✅ Save to database
         Employee::create($data);
         return redirect()->route('employees.index')->with('success', 'Employee added successfully!');
@@ -75,17 +70,6 @@ class EmployeeController extends Controller
             ]);
 
             $data = $request->all();
-
-            // ✅ Delete old photo
-            // if ($request->hasFile('photo')) {
-
-            //     if ($employee->photo && file_exists(storage_path('app/public/' . $employee->photo))) {
-            //         unlink(storage_path('app/public/' . $employee->photo));
-            //     }
-
-            //     // ✅ Upload new photo
-            //     $data['photo'] = $request->file('photo')->store('photos', 'public');
-            // }
 
             $employee->update($data);
 

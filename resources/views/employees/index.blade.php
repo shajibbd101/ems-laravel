@@ -24,11 +24,13 @@
 
         <!-- add export button -->
         <div class="flex justify-end mb-2 gap-2">
-            <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'pdf']) }}"
+            <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'pdf']) }}
+                    ?search={{ request('search') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
                 Export PDF
             </a>
-            <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'excel']) }}"
+            <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'excel']) }}
+                    ?search={{ request('search') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 ml-2">
                 Export Excel
             </a>
