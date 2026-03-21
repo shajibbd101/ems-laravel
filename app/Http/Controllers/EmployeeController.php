@@ -14,15 +14,15 @@ class EmployeeController extends Controller
         // Search
         if ($request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+                $q->where('name', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('email', 'LIKE', '%'.$request->search.'%');
             });
         }
 
         // 📄 Pagination
         $employees = $query->latest()
-                           ->paginate(16)
-                           ->withQueryString();
+            ->paginate(15)
+            ->withQueryString();
 
         return view('employees.index', compact('employees'));
     }
@@ -49,6 +49,7 @@ class EmployeeController extends Controller
 
         // ✅ Save to database
         Employee::create($data);
+
         return redirect()->route('employees.index')->with('success', 'Employee added successfully!');
     }
 
@@ -59,26 +60,27 @@ class EmployeeController extends Controller
 
     public function update(Request $request, Employee $employee)
     {
-            $request->validate([
-                'name' => 'required',
-                'email' => 'nullable|email|unique:employees,email,' . $employee->id,
-                'phone' => 'required|numeric|unique:employees,phone,' . $employee->id,
-                'designation' => 'required',
-                'salary' => 'nullable|numeric',
-                'joining_date' => 'nullable|date',
-                // 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-            ]);
+        $request->validate([
+            'name' => 'required',
+            'email' => 'nullable|email|unique:employees,email,'.$employee->id,
+            'phone' => 'required|numeric|unique:employees,phone,'.$employee->id,
+            'designation' => 'required',
+            'salary' => 'nullable|numeric',
+            'joining_date' => 'nullable|date',
+            // 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
 
-            $data = $request->all();
+        $data = $request->all();
 
-            $employee->update($data);
+        $employee->update($data);
 
-            return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
+        return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
     }
 
     public function destroy(Employee $employee)
     {
         $employee->delete();
+
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully!');
     }
 
@@ -89,14 +91,14 @@ class EmployeeController extends Controller
 
         if ($request->filled('search')) {
             $employees->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('phone', 'like', '%' . $request->search . '%');
+                $q->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('phone', 'like', '%'.$request->search.'%');
             });
         }
 
-        $employees = $employees->orderBy('id', 'desc') //keep consistent order
-            ->paginate(16)
-             ->withQueryString();
+        $employees = $employees->orderBy('id', 'desc') // keep consistent order
+            ->paginate(15)
+            ->withQueryString();
 
         return view('employees.index', compact('employees'));
     }

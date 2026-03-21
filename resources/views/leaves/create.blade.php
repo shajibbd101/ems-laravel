@@ -1,79 +1,66 @@
 <x-app-layout>
 
-<div class="max-w-xl mx-auto py-8">
-    <br>
-    <h2 class="text-3xl font-bold mb-6 text-gray-800 text-center">Add Leave</h2>
+<x-slot name="header">
+    <h2 class="text-xl font-semibold text-gray-800">Add Leave</h2>
+</x-slot>
 
-    <form method="POST" action="{{ route('leaves.store') }}"
-          class="bg-white p-6 rounded-lg shadow space-y-4">
-        @csrf
-<!-- 
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <form method="POST" action="{{ route('leaves.store') }}" class="space-y-6">
+            @csrf
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Employee</label>
+                <input type="text" id="employee_search"
+                    class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                    placeholder="Type employee name...">
+                <input type="hidden" name="employee_id" id="employee_id">
+                @error('employee_id')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+                <div id="suggestions" class="border rounded bg-white mt-1 hidden shadow-lg max-h-48 overflow-y-auto"></div>
             </div>
-        @endif -->
 
-        <div>
-            <label class="block mb-1 font-medium">Name</label>
-            
-            <input type="text" id="employee_search"
-                class="w-full border rounded p-2"
-                placeholder="Type employee name...">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <select name="type" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                    <option value="CL">Casual Leave</option>
+                    <option value="ML">Medical Leave</option>
+                    <option value="RL">Restricted Leave</option>
+                </select>
+            </div>
 
-            <!-- Hidden field to store selected employee ID -->
-            <input type="hidden" name="employee_id" id="employee_id">
-            @error('employee_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                    <input type="date" name="from_date" id="from_date"
+                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                    @error('from_date')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            <!-- Suggestion box -->
-            <div id="suggestions"
-                class="border rounded bg-white mt-1 hidden"></div>
-        </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                    <input type="date" name="to_date" id="to_date"
+                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                    @error('to_date')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
 
-        <div>
-            <label class="block mb-1 font-medium">Type</label>
-            <select name="type" class="w-full border rounded p-2">
-                <option value="CL">Casual Leave</option>
-                <option value="ML">Medical Leave</option>
-                <option value="RL">Restricted Leave</option>
-            </select>
-        </div>
-
-        <div>
-            <label class="block mb-1 font-medium">From Date</label>
-            <input type="date" name="from_date" id="from_date"
-                   class="w-full border rounded p-2">
-            @error('from_date')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div>
-            <label class="block mb-1 font-medium">To Date</label>
-            <input type="date" name="to_date" id="to_date"
-                   class="w-full border rounded p-2">
-            @error('to_date')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-        <br>
-
-        <div>
-            <button type="submit"
-                class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                Submit
-            </button>
-        </div>       
-    </form>    
+            <div class="flex items-center gap-3 pt-4">
+                <button type="submit" class="flex-1 bg-emerald-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-emerald-700 transition-colors">
+                    Submit
+                </button>
+                <a href="{{ route('leaves.index') }}" class="px-4 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                    Cancel
+                </a>
+            </div>
+        </form>    
+    </div>
 </div>
-
-<!-- add new -->
 
 <script>
 document.getElementById('employee_search').addEventListener('keyup', function () {
@@ -95,7 +82,7 @@ document.getElementById('employee_search').addEventListener('keyup', function ()
 
                 data.forEach(emp => {
                     let div = document.createElement('div');
-                    div.classList.add('p-2', 'hover:bg-gray-200', 'cursor-pointer');
+                    div.classList.add('p-3', 'hover:bg-emerald-50', 'cursor-pointer', 'border-b', 'last:border-b-0');
                     div.innerText = emp.name;
 
                     div.onclick = function () {
@@ -112,26 +99,22 @@ document.getElementById('employee_search').addEventListener('keyup', function ()
         });
 });
 
-//smart date validation
+const fromDate = document.getElementById('from_date');
+const toDate = document.getElementById('to_date');
 
-        const fromDate = document.getElementById('from_date');
-        const toDate = document.getElementById('to_date');
+fromDate.addEventListener('change', function () {
+    toDate.min = this.value;
 
-        fromDate.addEventListener('change', function () {
-            toDate.min = this.value;
+    if (toDate.value < this.value) {
+        toDate.value = '';
+    }
+});
 
-            // If to_date is earlier than from_date, clear it
-            if (toDate.value < this.value) {
-                toDate.value = '';
-            }
-        });
-
-        // Set initial min when page loads (for edit page)
-        window.onload = function () {
-            if (fromDate.value) {
-                toDate.min = fromDate.value;
-            }
-        };
+window.onload = function () {
+    if (fromDate.value) {
+        toDate.min = fromDate.value;
+    }
+};
 </script>
 
 </x-app-layout>

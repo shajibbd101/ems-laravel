@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Overtime;
 use App\Models\Employee;
+use App\Models\Overtime;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class OvertimeController extends Controller
-{   
-
+{
     public function index(Request $request)
     {
 
@@ -18,13 +17,13 @@ class OvertimeController extends Controller
         // Name Search
         if ($request->filled('search')) {
             $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->search . '%');
+                $q->where('name', 'LIKE', '%'.$request->search.'%');
             });
         }
 
         if ($request->search) {
             $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->search . '%');
+                $q->where('name', 'LIKE', '%'.$request->search.'%');
             });
         }
 
@@ -33,12 +32,12 @@ class OvertimeController extends Controller
             $month = Carbon::parse($request->month);
 
             $query->whereYear('date', $month->year)
-                  ->whereMonth('date', $month->month);
+                ->whereMonth('date', $month->month);
         }
 
         $overtimes = $query->latest()
-                            ->paginate(16)
-                            ->withQueryString();
+            ->paginate(15)
+            ->withQueryString();
 
         // Monthly Total Count Per Employee
 
@@ -50,7 +49,7 @@ class OvertimeController extends Controller
             ->when($request->filled('month'), function ($q) use ($request) {
                 $month = Carbon::parse($request->month);
                 $q->whereYear('date', $month->year)
-                ->whereMonth('date', $month->month);
+                    ->whereMonth('date', $month->month);
             })
             ->groupBy('employee_id')
             ->get()
@@ -62,6 +61,7 @@ class OvertimeController extends Controller
     public function create()
     {
         $employees = Employee::all();
+
         return view('overtimes.create', compact('employees'));
     }
 
@@ -82,12 +82,13 @@ class OvertimeController extends Controller
         return redirect()->route('overtimes.index')->with('success', 'Overtime added successfully!');
     }
 
-    // Edit 
+    // Edit
 
     public function edit(Overtime $overtime)
     {
         $overtime = Overtime::findOrFail($overtime->id);
         $employees = Employee::all();
+
         return view('overtimes.edit', compact('overtime', 'employees'));
     }
 
@@ -116,7 +117,7 @@ class OvertimeController extends Controller
         return redirect()->route('overtimes.index')->with('success', 'Overtime deleted successfully!');
     }
 
-    //overtime summary
+    // overtime summary
 
     public function summary(Request $request)
     {
@@ -125,25 +126,25 @@ class OvertimeController extends Controller
                 ? Carbon::parse($request->month)
                 : now();
 
-            $query = Overtime::selectRaw("
+        $query = Overtime::selectRaw("
                     employee_id,
                     SUM(CASE WHEN type = 'OnDay' THEN 1 ELSE 0 END) as total_on,
                     SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off
                 ")
-                ->whereYear('date', $month->year)
-                ->whereMonth('date', $month->month)
-                ->groupBy('employee_id')
-                ->with('employee');
+            ->whereYear('date', $month->year)
+            ->whereMonth('date', $month->month)
+            ->groupBy('employee_id')
+            ->with('employee');
 
-            // 🔍 Search by employee name
-            if ($request->filled('search')) {
-                $query->whereHas('employee', function ($q) use ($request) {
-                    $q->where('name', 'like', '%' . $request->search . '%');
-                });
-            }
+        // 🔍 Search by employee name
+        if ($request->filled('search')) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('name', 'like', '%'.$request->search.'%');
+            });
+        }
 
-            $summary = $query->paginate(15)->withQueryString();
+        $summary = $query->paginate(15)->withQueryString();
 
-            return view('overtimes.summary', compact('summary', 'month'));
+        return view('overtimes.summary', compact('summary', 'month'));
     }
 }
