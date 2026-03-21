@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Laravel
+/node_modules
+/vendor
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/storage/*.key
+/.env
+/.env.backup
+/.env.production
+/.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker/
+!.dockerignore
+Dockerfile*
+docker-compose*
+
+# Testing
+.phpunit.cache
+/tests/Coverage
+
+# Logs
+*.log
+storage/logs/*
+
+# Misc
+*.bak
+*.tmp
