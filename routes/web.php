@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\OvertimeController;
-use App\Http\Controllers\ExportController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ProfileController;
 use App\Models\Employee;
+use App\Models\Leave;
 use App\Models\Overtime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -28,14 +28,61 @@ Route::get('/', function () {
 */
 
 Route::get('/dashboard', function () {
+    $currentMonth = now()->month;
+    $currentYear = now()->year;
+
     $totalEmployees = Employee::count();
-    $totalOvertimeOnDay = Overtime::where('type', 'onDay')->count();
-    $totalOvertimeOffDay = Overtime::where('type', 'offDay')->count();
+    $totalSalaryCost = Employee::sum('salary');
+
+    $monthlyOvertimeOnDay = Overtime::whereMonth('date', $currentMonth)
+        ->whereYear('date', $currentYear)
+        ->where('type', 'OnDay')
+        ->count();
+    $monthlyOvertimeOffDay = Overtime::whereMonth('date', $currentMonth)
+        ->whereYear('date', $currentYear)
+        ->where('type', 'OffDay')
+        ->count();
+
+    $monthlyCL = Leave::whereMonth('from_date', $currentMonth)
+        ->whereYear('from_date', $currentYear)
+        ->where('type', 'CL')
+        ->count();
+    $monthlyML = Leave::whereMonth('from_date', $currentMonth)
+        ->whereYear('from_date', $currentYear)
+        ->where('type', 'ML')
+        ->count();
+    $monthlyRL = Leave::whereMonth('from_date', $currentMonth)
+        ->whereYear('from_date', $currentYear)
+        ->where('type', 'RL')
+        ->count();
+
+    $recentEmployees = Employee::latest()->take(5)->get();
+    $recentOvertimes = Overtime::with('employee')->latest()->take(5)->get();
+    $recentLeaves = Leave::with('employee')->latest()->take(5)->get();
+
+    $topOvertimeEmployees = Employee::withCount(['overtimes' => function ($q) use ($currentMonth, $currentYear) {
+        $q->whereMonth('date', $currentMonth)->whereYear('date', $currentYear);
+    }])->orderBy('overtimes_count', 'desc')->take(5)->get();
+
+    $topLeaveEmployees = Employee::withCount(['leaves' => function ($q) use ($currentMonth, $currentYear) {
+        $q->whereMonth('from_date', $currentMonth)->whereYear('from_date', $currentYear);
+    }])->orderBy('leaves_count', 'desc')->take(5)->get();
 
     return view('dashboard', compact(
         'totalEmployees',
-        'totalOvertimeOnDay',
-        'totalOvertimeOffDay'
+        'totalSalaryCost',
+        'monthlyOvertimeOnDay',
+        'monthlyOvertimeOffDay',
+        'monthlyCL',
+        'monthlyML',
+        'monthlyRL',
+        'recentEmployees',
+        'recentOvertimes',
+        'recentLeaves',
+        'topOvertimeEmployees',
+        'topLeaveEmployees',
+        'currentMonth',
+        'currentYear'
     ));
 })->middleware(['auth'])->name('dashboard');
 
@@ -97,21 +144,21 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-//Overtime Summary
+// Overtime Summary
 
 Route::get('/overtime-summary', [OvertimeController::class, 'summary'])
     ->name('overtimes.summary');
 
-//End Overtime Summary
+// End Overtime Summary
 
-//leave summary
+// leave summary
 Route::get('/leave-summary', [LeaveController::class, 'summary'])
     ->name('leaves.summary');
 
-//end leave summary
+// end leave summary
 
-//export routes
-Route::get('/export/{type}/{format}', 
+// export routes
+Route::get('/export/{type}/{format}',
     [ExportController::class, 'export']
 )->name('export.data');
 

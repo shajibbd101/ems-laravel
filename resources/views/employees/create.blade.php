@@ -35,7 +35,9 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                     <select name="designation" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                         <option value="Security Guard">Security Guard</option>
-                        <option value="Security Handler">Security Handler</option>
+                        <option value="Security Habilder">Security Habilder</option>
+                        <option value="Security Guard Thok">Security Guard Thok</option>
+                        <option value="Security Guard OutSourcing">Security Guard OutSourcing</option>
                     </select>
                 </div>
 
