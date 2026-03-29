@@ -1,55 +1,51 @@
 <x-app-layout>
 
 <x-slot name="header">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 lg:gap-4">
         <h2 class="text-lg lg:text-xl font-semibold text-gray-800">Employees</h2>
-    </div>
-</x-slot>
-
-<div class="max-w-7xl mx-auto">
-    <!-- Actions Bar -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 lg:p-4 mb-4 lg:mb-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 lg:gap-4">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 lg:gap-3">
             <!-- Search -->
-            <form action="{{ route('employees.search') }}" method="GET" class="flex items-center gap-2 flex-1">
-                <div class="relative flex-1">
+            <form action="{{ route('employees.search') }}" method="GET" class="flex items-center gap-2">
+                <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-4 w-4 lg:h-5 lg:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search..." class="pl-9 lg:pl-10 w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search..." class="pl-9 lg:pl-10 w-40 sm:w-52 lg:w-64 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
                 </div>
-                <button type="submit" class="px-3 lg:px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors whitespace-nowrap">
+                <button type="submit" class="px-2 lg:px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors whitespace-nowrap">
                     Search
                 </button>
             </form>
 
             <!-- Buttons -->
-            <div class="flex items-center gap-2 lg:gap-3">
-                <a href="{{ route('employees.create') }}" class="flex items-center px-3 lg:px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors whitespace-nowrap">
-                    <svg class="w-4 h-4 mr-1 lg:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    <span class="hidden sm:inline">Add Employee</span>
-                    <span class="sm:hidden">Add</span>
-                </a>
+            <div class="flex items-center gap-2">
                 <div class="relative group">
-                    <button class="flex items-center px-3 lg:px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors whitespace-nowrap">
+                    <button class="flex items-center px-2 lg:px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors whitespace-nowrap">
                         <svg class="w-4 h-4 mr-1 lg:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                         </svg>
                         <span class="hidden sm:inline">Export</span>
                     </button>
-                    <div class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <div class="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                         <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'pdf']) }}?search={{ request('search') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg">Export PDF</a>
                         <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'excel']) }}?search={{ request('search') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg">Export Excel</a>
                     </div>
                 </div>
+                <a href="{{ route('employees.create') }}" class="flex items-center px-2 lg:px-3 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors whitespace-nowrap">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Add</span>
+                </a>
             </div>
         </div>
     </div>
+</x-slot>
 
+<div class="max-w-7xl mx-auto">
     @if($employees->isEmpty())
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
             <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

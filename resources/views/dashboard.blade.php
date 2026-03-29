@@ -1,15 +1,9 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <h2 class="text-lg lg:text-xl font-semibold text-gray-800">
-                Dashboard
-            </h2>
-
-            <p class="text-xs lg:text-sm text-gray-500">
-                {{ now()->format('F Y') }}
-            </p>
-        </div>
+        <h2 class="text-lg lg:text-xl font-semibold text-gray-800">
+            Dashboard <span class="text-sm font-normal text-gray-500">{{ now()->format('F Y') }}</span>
+        </h2>
     </x-slot>
 
     <!-- Stats Grid - Row 1 -->
