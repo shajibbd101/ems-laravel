@@ -29,15 +29,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
-                    <input type="date" name="from_date" id="from_date"
-                        value="{{ $leave->from_date }}"
+                    <input type="text" name="from_date" id="from_date"
+                        value="{{ \Carbon\Carbon::parse($leave->from_date)->format('d/m/Y') }}"
+                        placeholder="Select date"
                         class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
-                    <input type="date" name="to_date" id="to_date"
-                        value="{{ $leave->to_date }}"
+                    <input type="text" name="to_date" id="to_date"
+                        value="{{ \Carbon\Carbon::parse($leave->to_date)->format('d/m/Y') }}"
+                        placeholder="Select date"
                         class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
             </div>
@@ -55,21 +57,27 @@
 </div>
 
 <script>
-    const fromDate = document.getElementById('from_date');
-    const toDate = document.getElementById('to_date');
-
-    fromDate.addEventListener('change', function () {
-        toDate.min = this.value;
-        if (toDate.value < this.value) {
-            toDate.value = '';
+document.addEventListener('DOMContentLoaded', function() {
+    const fromDateEl = document.getElementById('from_date');
+    const toDateEl = document.getElementById('to_date');
+    
+    const fromPicker = flatpickr(fromDateEl, {
+        dateFormat: "d/m/Y",
+        allowInput: false,
+        onChange: function(selectedDates, dateStr) {
+            toPicker.set('minDate', dateStr);
         }
     });
-
-    window.onload = function () {
-        if (fromDate.value) {
-            toDate.min = fromDate.value;
-        }
-    };
+    
+    const toPicker = flatpickr(toDateEl, {
+        dateFormat: "d/m/Y",
+        allowInput: false
+    });
+    
+    if (fromDateEl.value) {
+        toPicker.set('minDate', fromDateEl.value);
+    }
+});
 </script>
 
 </x-app-layout>

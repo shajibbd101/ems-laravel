@@ -37,8 +37,9 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                <input type="date" name="date"
-                    value="{{ $overtime->date }}"
+                <input type="text" name="date" id="date"
+                    value="{{ \Carbon\Carbon::parse($overtime->date)->format('d/m/Y') }}"
+                    placeholder="Select date"
                     class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
             </div>
 
@@ -53,5 +54,14 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#date", {
+        dateFormat: "d/m/Y",
+        allowInput: false
+    });
+});
+</script>
 
 </x-app-layout>

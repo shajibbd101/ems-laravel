@@ -50,15 +50,44 @@ class LeaveController extends Controller
 
     public function store(Request $request)
     {
-        $days = \Carbon\Carbon::parse($request->from_date)
-            ->diffInDays(\Carbon\Carbon::parse($request->to_date)) + 1;
+        $request->merge([
+            'from_date' => $this->convertDate($request->from_date),
+            'to_date' => $this->convertDate($request->to_date),
+        ]);
 
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'type' => 'required',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date|after_or_equal:from_date',
+            'from_date' => 'required|date_format:Y-m-d',
+            'to_date' => 'required|date_format:Y-m-d|after_or_equal:from_date',
         ]);
+
+        $existingLeave = Leave::where('employee_id', $request->employee_id)
+            ->where(function ($query) use ($request) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('from_date', '<=', $request->from_date)
+                        ->where('to_date', '>=', $request->from_date);
+                })->orWhere(function ($q) use ($request) {
+                    $q->where('from_date', '<=', $request->to_date)
+                        ->where('to_date', '>=', $request->to_date);
+                })->orWhere(function ($q) use ($request) {
+                    $q->where('from_date', '>=', $request->from_date)
+                        ->where('to_date', '<=', $request->to_date);
+                });
+            })
+            ->first();
+
+        $days = \Carbon\Carbon::parse($request->from_date)
+            ->diffInDays(\Carbon\Carbon::parse($request->to_date)) + 1;
+
+        if ($existingLeave) {
+            $employee = Employee::find($request->employee_id);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('employee_name', $employee->name ?? '')
+                ->with('error', 'Leave already exists for this employee on the selected date range!');
+        }
 
         Leave::create([
             'employee_id' => $request->employee_id,
@@ -84,6 +113,11 @@ class LeaveController extends Controller
     public function update(Request $request, $id)
     {
         $leave = Leave::findOrFail($id);
+
+        $request->merge([
+            'from_date' => $this->convertDate($request->from_date),
+            'to_date' => $this->convertDate($request->to_date),
+        ]);
 
         $days = \Carbon\Carbon::parse($request->from_date)
             ->diffInDays(\Carbon\Carbon::parse($request->to_date)) + 1;
@@ -168,5 +202,18 @@ class LeaveController extends Controller
         $summary = $query->paginate(15)->withQueryString();
 
         return view('leaves.summary', compact('summary', 'month'));
+    }
+
+    private function convertDate($date)
+    {
+        if (empty($date)) {
+            return $date;
+        }
+        $parts = explode('/', $date);
+        if (count($parts) === 3) {
+            return $parts[2].'-'.$parts[1].'-'.$parts[0];
+        }
+
+        return $date;
     }
 }

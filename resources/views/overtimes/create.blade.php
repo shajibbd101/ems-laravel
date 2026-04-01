@@ -9,12 +9,20 @@
         <form method="POST" action="{{ route('overtimes.store') }}" class="space-y-6">
             @csrf
 
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Employee</label>
                 <input type="text" id="employee_search"
+                    value="{{ old('employee_name', session('employee_name')) }}"
                     class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                     placeholder="Type employee name...">
-                <input type="hidden" name="employee_id" id="employee_id">
+                <input type="hidden" name="employee_id" id="employee_id" value="{{ old('employee_id') }}">
+                <input type="hidden" name="employee_name" id="employee_name" value="{{ old('employee_name', session('employee_name')) }}">
                 @error('employee_id')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -24,14 +32,17 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
                 <select name="type" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
-                    <option value="OnDay">On Day</option>
-                    <option value="OffDay">Off Day</option>
+                    <option value="OnDay" {{ old('type') == 'OnDay' ? 'selected' : '' }}>On Day</option>
+                    <option value="OffDay" {{ old('type') == 'OffDay' ? 'selected' : '' }}>Off Day</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                <input type="date" name="date" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                <input type="text" name="date" id="date" 
+                    value="{{ old('date') }}"
+                    placeholder="Select date"
+                    class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                 @error('date')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -49,7 +60,46 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
 <script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{ session('success') }}",
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "{{ session('error') }}",
+    });
+</script>
+@endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const employeeSearch = document.getElementById('employee_search');
+    const employeeId = document.getElementById('employee_id');
+    const employeeName = document.getElementById('employee_name');
+    
+    const nameValue = employeeName ? employeeName.value : '';
+    if (nameValue) {
+        employeeSearch.value = nameValue;
+    }
+    
+    if (employeeId && employeeId.value && employeeSearch.value) {
+        employeeSearch.readOnly = true;
+    }
+});
+
 document.getElementById('employee_search').addEventListener('keyup', function () {
     let query = this.value;
 
@@ -75,6 +125,7 @@ document.getElementById('employee_search').addEventListener('keyup', function ()
                     div.onclick = function () {
                         document.getElementById('employee_search').value = emp.name;
                         document.getElementById('employee_id').value = emp.id;
+                        document.getElementById('employee_name').value = emp.name;
                         suggestions.classList.add('hidden');
                     };
 
@@ -84,6 +135,13 @@ document.getElementById('employee_search').addEventListener('keyup', function ()
                 suggestions.classList.add('hidden');
             }
         });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#date", {
+        dateFormat: "d/m/Y",
+        allowInput: false
+    });
 });
 </script>
 

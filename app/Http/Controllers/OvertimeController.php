@@ -67,11 +67,28 @@ class OvertimeController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'date' => $this->convertDate($request->date),
+        ]);
+
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'type' => 'required',
-            'date' => 'required|date',
+            'date' => 'required|date_format:Y-m-d',
         ]);
+
+        $existingOvertime = Overtime::where('employee_id', $request->employee_id)
+            ->where('date', $request->date)
+            ->first();
+
+        if ($existingOvertime) {
+            $employee = Employee::find($request->employee_id);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('employee_name', $employee->name ?? '')
+                ->with('error', 'Overtime already exists for this employee on the selected date!');
+        }
 
         Overtime::create([
             'employee_id' => $request->employee_id,
@@ -97,6 +114,16 @@ class OvertimeController extends Controller
     public function update(Request $request, $id)
     {
         $overtime = Overtime::findOrFail($id);
+
+        $request->merge([
+            'date' => $this->convertDate($request->date),
+        ]);
+
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'type' => 'required',
+            'date' => 'required|date_format:Y-m-d',
+        ]);
 
         $overtime->update([
             'employee_id' => $request->employee_id,
@@ -146,5 +173,18 @@ class OvertimeController extends Controller
         $summary = $query->paginate(15)->withQueryString();
 
         return view('overtimes.summary', compact('summary', 'month'));
+    }
+
+    private function convertDate($date)
+    {
+        if (empty($date)) {
+            return $date;
+        }
+        $parts = explode('/', $date);
+        if (count($parts) === 3) {
+            return $parts[2].'-'.$parts[1].'-'.$parts[0];
+        }
+
+        return $date;
     }
 }

@@ -9,12 +9,20 @@
         <form method="POST" action="{{ route('leaves.store') }}" class="space-y-6">
             @csrf
 
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Employee</label>
                 <input type="text" id="employee_search"
+                    value="{{ old('employee_name', session('employee_name')) }}"
                     class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                     placeholder="Type employee name...">
-                <input type="hidden" name="employee_id" id="employee_id">
+                <input type="hidden" name="employee_id" id="employee_id" value="{{ old('employee_id') }}">
+                <input type="hidden" name="employee_name" id="employee_name" value="{{ old('employee_name', session('employee_name')) }}">
                 @error('employee_id')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -24,17 +32,19 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
                 <select name="type" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
-                    <option value="CL">Casual Leave</option>
-                    <option value="ML">Medical Leave</option>
-                    <option value="RL">Restricted Leave</option>
+                    <option value="CL" {{ old('type') == 'CL' ? 'selected' : '' }}>Casual Leave</option>
+                    <option value="ML" {{ old('type') == 'ML' ? 'selected' : '' }}>Medical Leave</option>
+                    <option value="RL" {{ old('type') == 'RL' ? 'selected' : '' }}>Restricted Leave</option>
                 </select>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
-                    <input type="date" name="from_date" id="from_date"
-                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                    <input type="text" name="from_date" id="from_date" 
+                        value="{{ old('from_date') }}"
+                        placeholder="Select date"
+                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 flatpickr-date">
                     @error('from_date')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -42,8 +52,10 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
-                    <input type="date" name="to_date" id="to_date"
-                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                    <input type="text" name="to_date" id="to_date" 
+                        value="{{ old('to_date') }}"
+                        placeholder="Select date"
+                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 flatpickr-date">
                     @error('to_date')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -62,59 +74,52 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
 <script>
-document.getElementById('employee_search').addEventListener('keyup', function () {
-    let query = this.value;
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{ session('success') }}",
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
 
-    if (query.length < 1) {
-        document.getElementById('suggestions').classList.add('hidden');
-        return;
-    }
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "{{ session('error') }}",
+    });
+</script>
+@endif
 
-    fetch(`/employee-search?query=${query}`)
-        .then(response => response.json())
-        .then(data => {
-            let suggestions = document.getElementById('suggestions');
-            suggestions.innerHTML = '';
-
-            if (data.length > 0) {
-                suggestions.classList.remove('hidden');
-
-                data.forEach(emp => {
-                    let div = document.createElement('div');
-                    div.classList.add('p-3', 'hover:bg-emerald-50', 'cursor-pointer', 'border-b', 'last:border-b-0');
-                    div.innerText = emp.name;
-
-                    div.onclick = function () {
-                        document.getElementById('employee_search').value = emp.name;
-                        document.getElementById('employee_id').value = emp.id;
-                        suggestions.classList.add('hidden');
-                    };
-
-                    suggestions.appendChild(div);
-                });
-            } else {
-                suggestions.classList.add('hidden');
-            }
-        });
-});
-
-const fromDate = document.getElementById('from_date');
-const toDate = document.getElementById('to_date');
-
-fromDate.addEventListener('change', function () {
-    toDate.min = this.value;
-
-    if (toDate.value < this.value) {
-        toDate.value = '';
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fromDateEl = document.getElementById('from_date');
+    const toDateEl = document.getElementById('to_date');
+    
+    const fromPicker = flatpickr(fromDateEl, {
+        dateFormat: "d/m/Y",
+        allowInput: false,
+        onChange: function(selectedDates, dateStr) {
+            toPicker.set('minDate', dateStr);
+        }
+    });
+    
+    const toPicker = flatpickr(toDateEl, {
+        dateFormat: "d/m/Y",
+        allowInput: false
+    });
+    
+    if (fromDateEl.value) {
+        toPicker.set('minDate', fromDateEl.value);
     }
 });
-
-window.onload = function () {
-    if (fromDate.value) {
-        toDate.min = fromDate.value;
-    }
-};
 </script>
 
 </x-app-layout>
