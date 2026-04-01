@@ -87,8 +87,8 @@
                             {{ $leave->type }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $leave->from_date }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $leave->to_date }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($leave->from_date)->format('d/m/Y') }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($leave->to_date)->format('d/m/Y') }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $leave->days }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
                         <div class="flex items-center justify-end gap-1">

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Exports\GenericExport;
 use App\Models\Employee;
 use App\Models\Leave;
 use App\Models\Overtime;
-use PDF;
 use Excel;
-use App\Exports\GenericExport;
+use Illuminate\Http\Request;
+use PDF;
 
 class ExportController extends Controller
 {
@@ -22,21 +22,25 @@ class ExportController extends Controller
                 $query = Employee::query();
                 // Search filter
                 if ($request->filled('search')) {
-                    $query->where('name', 'like', '%' . $request->search . '%')
-                        ->orWhere('phone', 'like', '%' . $request->search . '%');
+                    $query->where('name', 'like', '%'.$request->search.'%')
+                        ->orWhere('phone', 'like', '%'.$request->search.'%');
+                }
+                // Designation filter
+                if ($request->filled('designation')) {
+                    $query->where('designation', $request->designation);
                 }
                 $data = $query->latest()->get();
                 break;
 
             case 'leaves':
-            
+
                 $query = Leave::with('employee');
 
                 // Search filter
                 if ($request->filled('search')) {
                     $query->whereHas('employee', function ($q) use ($request) {
-                        $q->where('name', 'like', '%' . $request->search . '%')
-                        ->orWhere('phone', 'like', '%' . $request->search . '%');
+                        $q->where('name', 'like', '%'.$request->search.'%')
+                            ->orWhere('phone', 'like', '%'.$request->search.'%');
                     });
                 }
 
@@ -58,7 +62,7 @@ class ExportController extends Controller
                 // Optional: apply same filters if needed
                 if ($request->filled('search')) {
                     $query->whereHas('employee', function ($q) use ($request) {
-                        $q->where('name', 'LIKE', '%' . $request->search . '%');
+                        $q->where('name', 'LIKE', '%'.$request->search.'%');
                     });
                 }
 
@@ -86,7 +90,7 @@ class ExportController extends Controller
 
                 // 🔍 Search filter
                 if ($request->filled('search')) {
-                    $query->where('employees.name', 'like', '%' . $request->search . '%');
+                    $query->where('employees.name', 'like', '%'.$request->search.'%');
                 }
 
                 // 📅 Month filter (use SAME date column)
@@ -102,7 +106,7 @@ class ExportController extends Controller
                 break;
 
             case 'overtime-summary':
-                
+
                 $data = $this->getOvertimeSummary($request);
                 break;
 
@@ -112,29 +116,32 @@ class ExportController extends Controller
 
         if ($format == 'pdf') {
 
-            //Leave summary
+            // Leave summary
             if ($type == 'leave-summary') {
                 $pdf = PDF::loadView('exports.leave-summary-pdf', compact('data'));
+
                 return $pdf->download('leave-summary.pdf');
             }
 
-            //overtime summary
+            // overtime summary
             if ($type == 'overtime-summary') {
                 $pdf = PDF::loadView('exports.overtime-summary-pdf', compact('data'));
+
                 return $pdf->download('overtime-summary.pdf');
             }
-            
-            // other exports 
+
+            // other exports
             $pdf = PDF::loadView('exports.pdf', [
                 'data' => $data,
-                'type' => $type
+                'type' => $type,
             ]);
-            return $pdf->download($type . '.pdf');
+
+            return $pdf->download($type.'.pdf');
         }
 
         if ($format == 'excel') {
 
-            //Employee
+            // Employee
             if ($type == 'employees') {
                 $excelData = $data->map(function ($item) {
                     return [
@@ -150,7 +157,7 @@ class ExportController extends Controller
                 return Excel::download(new GenericExport($excelData), 'employees.xlsx');
             }
 
-            //Leave
+            // Leave
             if ($type == 'leaves') {
                 $excelData = $data->map(function ($item) {
                     return [
@@ -165,7 +172,7 @@ class ExportController extends Controller
                 return Excel::download(new GenericExport($excelData), 'leaves.xlsx');
             }
 
-            //Leave summary
+            // Leave summary
             if ($type == 'leave-summary') {
                 $excelData = $data->map(function ($item) {
                     return [
@@ -179,7 +186,7 @@ class ExportController extends Controller
                 return Excel::download(new GenericExport($excelData), 'leave-summary.xlsx');
             }
 
-            //Overtime
+            // Overtime
             if ($type == 'overtimes') {
                 $excelData = $data->map(function ($item) {
                     return [
@@ -192,8 +199,8 @@ class ExportController extends Controller
                 return Excel::download(new GenericExport($excelData), 'overtimes.xlsx');
             }
 
-            //overtime summary excell
-            
+            // overtime summary excell
+
             if ($type == 'overtime-summary') {
                 $excelData = $data->map(function ($item) {
                     return [
@@ -209,8 +216,8 @@ class ExportController extends Controller
 
         abort(404);
     }
-    
-    //overtime summary query
+
+    // overtime summary query
     private function getOvertimeSummary(Request $request)
     {
 
@@ -231,7 +238,7 @@ class ExportController extends Controller
 
         // 🔍 Search filter
         if ($request->filled('search')) {
-            $query->where('employees.name', 'like', '%' . $request->search . '%');
+            $query->where('employees.name', 'like', '%'.$request->search.'%');
         }
 
         return $query->get();

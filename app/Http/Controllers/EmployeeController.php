@@ -11,7 +11,6 @@ class EmployeeController extends Controller
     {
         $query = Employee::query();
 
-        // Search
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%'.$request->search.'%')
@@ -19,7 +18,10 @@ class EmployeeController extends Controller
             });
         }
 
-        // 📄 Pagination
+        if ($request->designation) {
+            $query->where('designation', $request->designation);
+        }
+
         $employees = $query->latest()
             ->paginate(15)
             ->withQueryString();
@@ -96,7 +98,11 @@ class EmployeeController extends Controller
             });
         }
 
-        $employees = $employees->orderBy('id', 'desc') // keep consistent order
+        if ($request->filled('designation')) {
+            $employees->where('designation', $request->designation);
+        }
+
+        $employees = $employees->orderBy('id', 'desc')
             ->paginate(15)
             ->withQueryString();
 

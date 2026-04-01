@@ -8,7 +8,7 @@
 
     <!-- Stats Grid - Row 1 -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('employees.index') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Total Employees</p>
@@ -21,9 +21,9 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('overtimes.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Monthly Overtime (On Day)</p>
@@ -36,9 +36,9 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('overtimes.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Monthly Overtime (Off Day)</p>
@@ -51,9 +51,9 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('overtimes.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Total Monthly Overtime</p>
@@ -66,12 +66,12 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Stats Grid - Row 2: Leave Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-4">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('leaves.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Casual Leave (CL)</p>
@@ -84,9 +84,9 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('leaves.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Medical Leave (ML)</p>
@@ -99,9 +99,9 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('leaves.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Restricted Leave (RL)</p>
@@ -114,9 +114,9 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
+        <a href="{{ route('leaves.summary') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 lg:p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
                     <p class="text-xs lg:text-sm font-medium text-gray-500 truncate">Total Monthly Leaves</p>
@@ -129,7 +129,7 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Top Performers & Quick Stats Section -->
@@ -259,7 +259,7 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-medium text-gray-900 truncate">{{ $overtime->employee->name ?? 'N/A' }}</p>
-                                <p class="text-xs text-gray-500 truncate">{{ $overtime->type }} - {{ $overtime->date }}</p>
+                                <p class="text-xs text-gray-500 truncate">{{ $overtime->type }} - {{ \Carbon\Carbon::parse($overtime->date)->format('d/m/Y') }}</p>
                             </div>
                             <span class="text-xs text-gray-400">{{ $overtime->created_at->diffForHumans() }}</span>
                         </div>
@@ -285,7 +285,7 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-medium text-gray-900 truncate">{{ $leave->employee->name ?? 'N/A' }}</p>
-                                <p class="text-xs text-gray-500 truncate">{{ $leave->type }} - {{ $leave->from_date }}</p>
+                                <p class="text-xs text-gray-500 truncate">{{ $leave->type }} - {{ \Carbon\Carbon::parse($leave->from_date)->format('d/m/Y') }}</p>
                             </div>
                             <span class="text-xs text-gray-400">{{ $leave->created_at->diffForHumans() }}</span>
                         </div>

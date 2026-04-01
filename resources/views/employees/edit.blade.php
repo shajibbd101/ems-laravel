@@ -40,7 +40,9 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                     <select name="designation" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                         <option value="Security Guard" {{ $employee->designation == 'Security Guard' ? 'selected' : '' }}>Security Guard</option>
-                        <option value="Security Handler" {{ $employee->designation == 'Security Handler' ? 'selected' : '' }}>Security Handler</option>
+                        <option value="Security Habilder" {{ $employee->designation == 'Security Habilder' ? 'selected' : '' }}>Security Habilder</option>
+                        <option value="MasterRole" {{ $employee->designation == 'MasterRole' ? 'selected' : '' }}>MasterRole</option>
+                        <option value="Thok" {{ $employee->designation == 'Thok' ? 'selected' : '' }}>Thok</option>
                     </select>
                 </div>
 

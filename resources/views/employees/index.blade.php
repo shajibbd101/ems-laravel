@@ -5,7 +5,7 @@
         <h2 class="text-lg lg:text-xl font-semibold text-gray-800">Employees</h2>
         
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 lg:gap-3">
-            <!-- Search -->
+            <!-- Search & Designation Filter -->
             <form action="{{ route('employees.search') }}" method="GET" class="flex items-center gap-2">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -13,11 +13,23 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search..." class="pl-9 lg:pl-10 w-40 sm:w-52 lg:w-64 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search..." class="pl-9 lg:pl-10 w-32 sm:w-40 lg:w-48 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
                 </div>
+                <select name="designation" onchange="this.form.submit()" class="w-28 sm:w-36 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                    <option value="">All</option>
+                    <option value="Security Guard" {{ request('designation') == 'Security Guard' ? 'selected' : '' }}>Security Guard</option>
+                    <option value="Security Habilder" {{ request('designation') == 'Security Habilder' ? 'selected' : '' }}>Security Habilder</option>
+                    <option value="MasterRole" {{ request('designation') == 'MasterRole' ? 'selected' : '' }}>MasterRole</option>
+                    <option value="Thok" {{ request('designation') == 'Thok' ? 'selected' : '' }}>Thok</option>
+                </select>
                 <button type="submit" class="px-2 lg:px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors whitespace-nowrap">
-                    Search
+                    Filter
                 </button>
+                @if(request('search') || request('designation'))
+                    <a href="{{ route('employees.search') }}" class="px-2 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors">
+                        Clear
+                    </a>
+                @endif
             </form>
 
             <!-- Buttons -->
@@ -30,8 +42,8 @@
                         <span class="hidden sm:inline">Export</span>
                     </button>
                     <div class="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                        <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'pdf']) }}?search={{ request('search') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg">Export PDF</a>
-                        <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'excel']) }}?search={{ request('search') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg">Export Excel</a>
+                        <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'pdf']) }}?search={{ request('search') }}&designation={{ request('designation') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg">Export PDF</a>
+                        <a href="{{ route('export.data', ['type' => 'employees', 'format' => 'excel']) }}?search={{ request('search') }}&designation={{ request('designation') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg">Export Excel</a>
                     </div>
                 </div>
                 <a href="{{ route('employees.create') }}" class="flex items-center px-2 lg:px-3 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors whitespace-nowrap">
@@ -83,7 +95,7 @@
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $employee->email }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $employee->phone }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $employee->designation }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${{ number_format($employee->salary, 2) }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">৳{{ number_format($employee->salary, 2) }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
                         <div class="flex items-center justify-end gap-1">
                             <a href="{{ route('employees.edit', $employee->id) }}" class="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Edit">

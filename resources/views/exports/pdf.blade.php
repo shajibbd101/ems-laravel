@@ -84,15 +84,15 @@
                 @elseif($type == 'leaves')
                     <td>{{ $row->employee->name ?? '' }}</td>
                     <td>{{ $row->type }}</td>
-                    <td>{{ $row->from_date }}</td>
-                    <td>{{ $row->to_date }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->from_date)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->to_date)->format('d/m/Y') }}</td>
                     <td>{{ $row->days }}</td>
 
                 {{-- Overtime Data --}}
                 @elseif($type == 'overtimes')
                     <td>{{ $row->employee->name ?? '' }}</td>
                     <td>{{ $row->type }}</td>
-                    <td>{{ $row->date }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->date)->format('d/m/Y') }}</td>
                     <td>{{ $row->type == 'OnDay' ? 1 : 0 }}</td>
                     <td>{{ $row->type == 'OffDay' ? 1 : 0 }}</td>
                 @endif

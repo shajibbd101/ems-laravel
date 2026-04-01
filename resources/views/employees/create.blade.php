@@ -36,8 +36,8 @@
                     <select name="designation" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                         <option value="Security Guard">Security Guard</option>
                         <option value="Security Habilder">Security Habilder</option>
-                        <option value="Security Guard Thok">Security Guard Thok</option>
-                        <option value="Security Guard OutSourcing">Security Guard OutSourcing</option>
+                        <option value="MasterRole">MasterRole</option>
+                        <option value="Thok">Thok</option>
                     </select>
                 </div>
 

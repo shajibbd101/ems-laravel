@@ -87,7 +87,7 @@
                             {{ $ot->type }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $ot->date }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($ot->date)->format('d/m/Y') }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $monthlyTotals[$ot->employee_id]->total_on ?? 0 }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $monthlyTotals[$ot->employee_id]->total_off ?? 0 }}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
