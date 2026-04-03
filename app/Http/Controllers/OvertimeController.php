@@ -17,21 +17,37 @@ class OvertimeController extends Controller
         if ($request->filled('search')) {
             $query->whereHas('employee', function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%'.$request->search.'%')
-                    ->orWhere('employee_number', 'LIKE', '%'.$request->search.'%');
+                    ->orWhere('employee_number', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('phone', 'LIKE', '%'.$request->search.'%');
             });
         }
 
         // Specific date filter
         if ($request->filled('date')) {
-            $query->whereDate('date', Carbon::parse($request->date)->format('Y-m-d'));
+            $dateValue = $request->date;
+            if (strpos($dateValue, '/') !== false) {
+                $dateValue = $this->convertDate($dateValue);
+            }
+            $query->whereDate('date', $dateValue);
         }
 
         // Month filter
         if ($request->filled('month')) {
-            $month = Carbon::parse($request->month);
+            $monthValue = $request->month;
+            if (strpos($monthValue, '/') !== false) {
+                $parts = explode('/', $monthValue);
+                if (count($parts) === 2) {
+                    $monthValue = $parts[1].'-'.$parts[0].'-01';
+                }
+            } else {
+                $monthValue = Carbon::parse($monthValue)->format('Y-m');
+            }
+            $month = Carbon::parse($monthValue);
 
             $query->whereYear('date', $month->year)
                 ->whereMonth('date', $month->month);
+        } else {
+            $month = now();
         }
 
         $overtimes = $query->latest()
@@ -39,7 +55,7 @@ class OvertimeController extends Controller
             ->withQueryString();
 
         // Monthly Total Count Per Employee
-        $monthFilter = $request->filled('month') ? Carbon::parse($request->month) : now();
+        $monthFilter = $month;
 
         $monthlyTotals = Overtime::selectRaw("
                 employee_id,
@@ -161,9 +177,16 @@ class OvertimeController extends Controller
 
     public function summary(Request $request)
     {
-        $month = $request->filled('month')
-                ? Carbon::parse($request->month)
-                : now();
+        $monthValue = $request->filled('month') ? $request->month : now()->format('Y-m');
+
+        if (strpos($monthValue, '/') !== false) {
+            $parts = explode('/', $monthValue);
+            if (count($parts) === 2) {
+                $monthValue = $parts[1].'-'.$parts[0].'-01';
+            }
+        }
+
+        $month = Carbon::parse($monthValue);
 
         $query = Overtime::selectRaw("
                     employee_id,

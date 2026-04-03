@@ -17,8 +17,24 @@
                 </div>
             </form>
             <form action="{{ route('overtimes.index') }}" method="GET" class="flex items-center gap-2">
-                <input type="date" name="date" value="{{ request('date') }}" class="rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
-                <input type="month" name="month" value="{{ request('month') }}" class="rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                @php
+                    $dateOld = request('date');
+                    if ($dateOld && strpos($dateOld, '/') === false) {
+                        $dateOld = \Carbon\Carbon::parse($dateOld)->format('d/m/Y');
+                    }
+                    $monthOld = request('month');
+                    if ($monthOld) {
+                        $monthClean = preg_replace('/-\d+$/', '', $monthOld);
+                        if (strpos($monthClean, '/') !== false) {
+                            $parts = explode('/', $monthClean);
+                            $monthOld = $parts[0] . '/' . $parts[1];
+                        } else {
+                            $monthOld = \Carbon\Carbon::parse($monthClean . '-01')->format('m/Y');
+                        }
+                    }
+                @endphp
+                <input type="text" name="date" id="filter_date" value="{{ $dateOld }}" placeholder="Select date" class="w-36 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 flatpickr-date">
+                <input type="text" name="month" id="filter_month" value="{{ $monthOld }}" placeholder="Select month" class="w-36 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 flatpickr-month">
                 <button type="submit" class="px-2 lg:px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors">Filter</button>
                 @if(request('date') || request('month'))
                     <a href="{{ route('overtimes.index') }}" class="px-2 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors">Clear</a>
@@ -150,22 +166,67 @@
 @endif
 
 <script>
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This overtime record will be permanently deleted!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc2626',
-            cancelButtonColor: '#6366f1',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form-' + id).submit();
+document.addEventListener('DOMContentLoaded', function() {
+    const dateEl = document.getElementById('filter_date');
+    const monthEl = document.getElementById('filter_month');
+    const monthValue = monthEl ? monthEl.value : '';
+    
+    if (dateEl) {
+        flatpickr(dateEl, {
+            dateFormat: "d/m/Y",
+            allowInput: false
+        });
+    }
+    
+    if (monthEl && monthValue) {
+        const parts = monthValue.split('/');
+        if (parts.length === 2) {
+            const defaultDate = new Date(parts[1], parseInt(parts[0]) - 1, 1);
+            flatpickr(monthEl, {
+                dateFormat: "m/Y",
+                allowInput: false,
+                defaultDate: defaultDate,
+                plugins: [new monthSelectPlugin({
+                    dateFormat: "m/Y"
+                })],
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length > 0) {
+                        const monthStr = (selectedDates[0].getMonth() + 1).toString().padStart(2, '0') + '/' + selectedDates[0].getFullYear();
+                        monthEl.value = monthStr;
+                    }
+                }
+            });
+        } else {
+            flatpickr(monthEl, {
+                dateFormat: "m/Y",
+                allowInput: false,
+                plugins: [new monthSelectPlugin({
+                    dateFormat: "m/Y"
+                })],
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length > 0) {
+                        const monthStr = (selectedDates[0].getMonth() + 1).toString().padStart(2, '0') + '/' + selectedDates[0].getFullYear();
+                        monthEl.value = monthStr;
+                    }
+                }
+            });
+        }
+    } else if (monthEl) {
+        flatpickr(monthEl, {
+            dateFormat: "m/Y",
+            allowInput: false,
+            plugins: [new monthSelectPlugin({
+                dateFormat: "m/Y"
+            })],
+            onChange: function(selectedDates, dateStr) {
+                if (selectedDates.length > 0) {
+                    const monthStr = (selectedDates[0].getMonth() + 1).toString().padStart(2, '0') + '/' + selectedDates[0].getFullYear();
+                    monthEl.value = monthStr;
+                }
             }
         });
     }
+});
 </script>
 
 </x-app-layout>

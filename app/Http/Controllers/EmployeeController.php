@@ -37,16 +37,19 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'employee_number' => 'nullable|unique:employees',
             'name' => 'required',
             'email' => 'nullable|email|unique:employees',
             'phone' => 'required|numeric|unique:employees',
             'designation' => 'required',
             'salary' => 'nullable|numeric',
-            'joining_date' => 'nullable|date',
+            'joining_date' => 'nullable|date_format:d/m/Y',
         ]);
 
         $data = $request->all();
+
+        if (! empty($data['joining_date'])) {
+            $data['joining_date'] = $this->convertDate($data['joining_date']);
+        }
 
         Employee::create($data);
 
@@ -61,20 +64,36 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $request->validate([
-            'employee_number' => 'nullable|unique:employees,employee_number,'.$employee->id,
             'name' => 'required',
             'email' => 'nullable|email|unique:employees,email,'.$employee->id,
             'phone' => 'required|numeric|unique:employees,phone,'.$employee->id,
             'designation' => 'required',
             'salary' => 'nullable|numeric',
-            'joining_date' => 'nullable|date',
+            'joining_date' => 'nullable|date_format:d/m/Y',
         ]);
 
         $data = $request->all();
 
+        if (! empty($data['joining_date'])) {
+            $data['joining_date'] = $this->convertDate($data['joining_date']);
+        }
+
         $employee->update($data);
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
+    }
+
+    private function convertDate($date)
+    {
+        if (empty($date)) {
+            return $date;
+        }
+        $parts = explode('/', $date);
+        if (count($parts) === 3) {
+            return $parts[2].'-'.$parts[1].'-'.$parts[0];
+        }
+
+        return $date;
     }
 
     public function destroy(Employee $employee)

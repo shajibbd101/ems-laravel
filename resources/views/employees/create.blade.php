@@ -11,12 +11,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Employee Number</label>
-                    <input type="text" name="employee_number" value="{{ old('employee_number') }}" 
-                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
-                </div>
-
-                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
                     <input type="text" name="name" value="{{ old('name') }}" 
                         class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500" required>
@@ -55,8 +49,16 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
-                    <input type="date" name="joining_date" 
-                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                    @php
+                        $joiningDateOld = old('joining_date');
+                        if ($joiningDateOld && strpos($joiningDateOld, '/') === false) {
+                            $joiningDateOld = \Carbon\Carbon::parse($joiningDateOld)->format('d/m/Y');
+                        }
+                    @endphp
+                    <input type="text" name="joining_date" id="joining_date" 
+                        value="{{ $joiningDateOld }}"
+                        placeholder="Select date"
+                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 flatpickr-date">
                 </div>
             </div>
 
@@ -73,6 +75,21 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const joiningDateEl = document.getElementById('joining_date');
+    
+    const joiningPicker = flatpickr(joiningDateEl, {
+        dateFormat: "d/m/Y",
+        allowInput: false
+    });
+    
+    if (joiningDateEl.value) {
+        joiningPicker.setDate(joiningDateEl.value, true);
+    }
+});
+</script>
 
 @if ($errors->any())
 <script>

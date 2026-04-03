@@ -17,7 +17,19 @@
                 </div>
             </form>
             <form action="{{ route('overtimes.summary') }}" method="GET" class="flex items-center gap-2">
-                <input type="month" name="month" value="{{ request('month') }}" class="rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                @php
+                    $monthOld = request('month');
+                    if ($monthOld) {
+                        $monthClean = preg_replace('/-\d+$/', '', $monthOld);
+                        if (strpos($monthClean, '/') !== false) {
+                            $parts = explode('/', $monthClean);
+                            $monthOld = $parts[0] . '/' . $parts[1];
+                        } else {
+                            $monthOld = \Carbon\Carbon::parse($monthClean . '-01')->format('m/Y');
+                        }
+                    }
+                @endphp
+                <input type="text" name="month" id="filter_month" value="{{ $monthOld }}" placeholder="Select month" class="w-36 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 flatpickr-month">
                 <button type="submit" class="px-2 lg:px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors">Filter</button>
             </form>
 
@@ -111,5 +123,61 @@
     </div>
     @endif
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const monthEl = document.getElementById('filter_month');
+    const monthValue = monthEl ? monthEl.value : '';
+    
+    if (monthEl && monthValue) {
+        const parts = monthValue.split('/');
+        if (parts.length === 2) {
+            const defaultDate = new Date(parts[1], parseInt(parts[0]) - 1, 1);
+            flatpickr(monthEl, {
+                dateFormat: "m/Y",
+                allowInput: false,
+                defaultDate: defaultDate,
+                plugins: [new monthSelectPlugin({
+                    dateFormat: "m/Y"
+                })],
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length > 0) {
+                        const monthStr = (selectedDates[0].getMonth() + 1).toString().padStart(2, '0') + '/' + selectedDates[0].getFullYear();
+                        monthEl.value = monthStr;
+                    }
+                }
+            });
+        } else {
+            flatpickr(monthEl, {
+                dateFormat: "m/Y",
+                allowInput: false,
+                plugins: [new monthSelectPlugin({
+                    dateFormat: "m/Y"
+                })],
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length > 0) {
+                        const monthStr = (selectedDates[0].getMonth() + 1).toString().padStart(2, '0') + '/' + selectedDates[0].getFullYear();
+                        monthEl.value = monthStr;
+                    }
+                }
+            });
+        }
+    } else if (monthEl) {
+        flatpickr(monthEl, {
+            dateFormat: "m/Y",
+            allowInput: false,
+            plugins: [new monthSelectPlugin({
+                dateFormat: "m/Y"
+            })],
+            onChange: function(selectedDates, dateStr) {
+                if (selectedDates.length > 0) {
+                    const monthStr = (selectedDates[0].getMonth() + 1).toString().padStart(2, '0') + '/' + selectedDates[0].getFullYear();
+                    monthEl.value = monthStr;
+                }
+            }
+        });
+    }
+});
+</script>
 
 </x-app-layout>
