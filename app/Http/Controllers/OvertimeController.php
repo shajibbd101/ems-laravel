@@ -11,20 +11,19 @@ class OvertimeController extends Controller
 {
     public function index(Request $request)
     {
-
         $query = Overtime::with('employee');
 
-        // Name Search
+        // Name or Employee Number Search
         if ($request->filled('search')) {
             $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%'.$request->search.'%');
+                $q->where('name', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('employee_number', 'LIKE', '%'.$request->search.'%');
             });
         }
 
-        if ($request->search) {
-            $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%'.$request->search.'%');
-            });
+        // Specific date filter
+        if ($request->filled('date')) {
+            $query->whereDate('date', Carbon::parse($request->date)->format('Y-m-d'));
         }
 
         // Month filter
@@ -40,17 +39,15 @@ class OvertimeController extends Controller
             ->withQueryString();
 
         // Monthly Total Count Per Employee
+        $monthFilter = $request->filled('month') ? Carbon::parse($request->month) : now();
 
         $monthlyTotals = Overtime::selectRaw("
                 employee_id,
                 SUM(CASE WHEN type = 'OnDay' THEN 1 ELSE 0 END) as total_on,
                 SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off
             ")
-            ->when($request->filled('month'), function ($q) use ($request) {
-                $month = Carbon::parse($request->month);
-                $q->whereYear('date', $month->year)
-                    ->whereMonth('date', $month->month);
-            })
+            ->whereYear('date', $monthFilter->year)
+            ->whereMonth('date', $monthFilter->month)
             ->groupBy('employee_id')
             ->get()
             ->keyBy('employee_id');
@@ -74,25 +71,27 @@ class OvertimeController extends Controller
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'type' => 'required',
+            'shift' => 'nullable|in:A,B,C',
             'date' => 'required|date_format:Y-m-d',
         ]);
 
-        $existingOvertime = Overtime::where('employee_id', $request->employee_id)
+        $existingCount = Overtime::where('employee_id', $request->employee_id)
             ->where('date', $request->date)
-            ->first();
+            ->count();
 
-        if ($existingOvertime) {
+        if ($existingCount >= 2) {
             $employee = Employee::find($request->employee_id);
 
             return redirect()->back()
                 ->withInput()
                 ->with('employee_name', $employee->name ?? '')
-                ->with('error', 'Overtime already exists for this employee on the selected date!');
+                ->with('error', 'Maximum 2 overtime entries allowed per employee per date!');
         }
 
         Overtime::create([
             'employee_id' => $request->employee_id,
             'type' => $request->type,
+            'shift' => $request->shift,
             'date' => $request->date,
         ]);
 
@@ -122,12 +121,26 @@ class OvertimeController extends Controller
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'type' => 'required',
+            'shift' => 'nullable|in:A,B,C',
             'date' => 'required|date_format:Y-m-d',
         ]);
+
+        // Check for max 2 entries excluding current record
+        $existingCount = Overtime::where('employee_id', $request->employee_id)
+            ->where('date', $request->date)
+            ->where('id', '!=', $id)
+            ->count();
+
+        if ($existingCount >= 2) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Maximum 2 overtime entries allowed per employee per date!');
+        }
 
         $overtime->update([
             'employee_id' => $request->employee_id,
             'type' => $request->type,
+            'shift' => $request->shift,
             'date' => $request->date,
         ]);
 
@@ -148,7 +161,6 @@ class OvertimeController extends Controller
 
     public function summary(Request $request)
     {
-
         $month = $request->filled('month')
                 ? Carbon::parse($request->month)
                 : now();
@@ -156,17 +168,21 @@ class OvertimeController extends Controller
         $query = Overtime::selectRaw("
                     employee_id,
                     SUM(CASE WHEN type = 'OnDay' THEN 1 ELSE 0 END) as total_on,
-                    SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off
+                    SUM(CASE WHEN type = 'OffDay' THEN 1 ELSE 0 END) as total_off,
+                    SUM(CASE WHEN shift = 'A' THEN 1 ELSE 0 END) as shift_a,
+                    SUM(CASE WHEN shift = 'B' THEN 1 ELSE 0 END) as shift_b,
+                    SUM(CASE WHEN shift = 'C' THEN 1 ELSE 0 END) as shift_c
                 ")
             ->whereYear('date', $month->year)
             ->whereMonth('date', $month->month)
             ->groupBy('employee_id')
             ->with('employee');
 
-        // 🔍 Search by employee name
+        // 🔍 Search by employee name or employee number
         if ($request->filled('search')) {
             $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'like', '%'.$request->search.'%');
+                $q->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('employee_number', 'like', '%'.$request->search.'%');
             });
         }
 

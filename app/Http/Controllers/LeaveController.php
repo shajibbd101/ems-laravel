@@ -11,19 +11,19 @@ class LeaveController extends Controller
 {
     public function index(Request $request)
     {
-
         $query = Leave::with('employee');
-        // Name Search
+
+        // Name or Employee Number Search
         if ($request->filled('search')) {
             $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%'.$request->search.'%');
+                $q->where('name', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('employee_number', 'LIKE', '%'.$request->search.'%');
             });
         }
 
-        if ($request->search) {
-            $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%'.$request->search.'%');
-            });
+        // Specific date filter (from_date)
+        if ($request->filled('date')) {
+            $query->whereDate('from_date', Carbon::parse($request->date)->format('Y-m-d'));
         }
 
         // Month filter
@@ -31,7 +31,7 @@ class LeaveController extends Controller
             $month = Carbon::parse($request->month);
 
             $query->whereYear('from_date', $month->year)
-                ->whereMonth('to_date', $month->month);
+                ->whereMonth('from_date', $month->month);
         }
 
         $leaves = $query->latest()
@@ -188,14 +188,15 @@ class LeaveController extends Controller
                     SUM(CASE WHEN type = 'RL' THEN days ELSE 0 END) as RL
                 ")
             ->whereYear('from_date', $month->year)
-            ->whereMonth('to_date', $month->month)
+            ->whereMonth('from_date', $month->month)
             ->groupBy('employee_id')
             ->with('employee');
 
-        // 🔍 Search by employee name
+        // 🔍 Search by employee name or employee number
         if ($request->filled('search')) {
             $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('name', 'like', '%'.$request->search.'%');
+                $q->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('employee_number', 'like', '%'.$request->search.'%');
             });
         }
 

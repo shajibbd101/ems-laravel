@@ -13,7 +13,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search by name" class="pl-9 lg:pl-10 w-40 sm:w-52 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search by name or number" class="pl-9 lg:pl-10 w-40 sm:w-52 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
                 </div>
             </form>
             <form action="{{ route('overtimes.summary') }}" method="GET" class="flex items-center gap-2">
@@ -52,9 +52,13 @@
         <table class="w-full">    
             <thead class="bg-gray-50 border-b border-gray-100">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Employee</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total On Day</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total Off Day</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Employee</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Shift (A)</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Shift (B)</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Shift (C)</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Total On Day</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Total Off Day</th>
                 </tr>
             </thead>
             
@@ -62,19 +66,35 @@
                 @foreach($summary as $row)
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-center">
                             <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-xs font-medium">
                                 {{ substr($row->employee->name, 0, 1) }}
                             </div>
                             <span class="ml-2 text-sm font-medium text-gray-900">{{ $row->employee->name }}</span>
                         </div>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ $row->employee->phone }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                            {{ $row->shift_a ?? 0 }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                            {{ $row->shift_b ?? 0 }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">
+                            {{ $row->shift_c ?? 0 }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
                             {{ $row->total_on }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
                             {{ $row->total_off }}
                         </span>

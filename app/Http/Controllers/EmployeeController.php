@@ -37,19 +37,17 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'employee_number' => 'nullable|unique:employees',
             'name' => 'required',
             'email' => 'nullable|email|unique:employees',
             'phone' => 'required|numeric|unique:employees',
             'designation' => 'required',
             'salary' => 'nullable|numeric',
             'joining_date' => 'nullable|date',
-            // 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // ✅ Get all data
         $data = $request->all();
 
-        // ✅ Save to database
         Employee::create($data);
 
         return redirect()->route('employees.index')->with('success', 'Employee added successfully!');
@@ -63,13 +61,13 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $request->validate([
+            'employee_number' => 'nullable|unique:employees,employee_number,'.$employee->id,
             'name' => 'required',
             'email' => 'nullable|email|unique:employees,email,'.$employee->id,
             'phone' => 'required|numeric|unique:employees,phone,'.$employee->id,
             'designation' => 'required',
             'salary' => 'nullable|numeric',
             'joining_date' => 'nullable|date',
-            // 'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $data = $request->all();

@@ -27,18 +27,38 @@
                 <input type="hidden" name="employee_id" value="{{ $overtime->employee_id }}">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                <select name="type" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
-                    <option value="OnDay" {{ $overtime->type == 'OnDay' ? 'selected' : '' }}>On Day</option>
-                    <option value="OffDay" {{ $overtime->type == 'OffDay' ? 'selected' : '' }}>Off Day</option>
-                </select>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select name="type" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                        <option value="OnDay" {{ old('type', $overtime->type) == 'OnDay' ? 'selected' : '' }}>On Day</option>
+                        <option value="OffDay" {{ old('type', $overtime->type) == 'OffDay' ? 'selected' : '' }}>Off Day</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Shift</label>
+                    <select name="shift" class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                        <option value="">Select Shift</option>
+                        <option value="A" {{ old('shift', $overtime->shift) == 'A' ? 'selected' : '' }}>A</option>
+                        <option value="B" {{ old('shift', $overtime->shift) == 'B' ? 'selected' : '' }}>B</option>
+                        <option value="C" {{ old('shift', $overtime->shift) == 'C' ? 'selected' : '' }}>C</option>
+                    </select>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                @php
+                    $dateOld = old('date');
+                    if (!$dateOld) {
+                        $dateOld = \Carbon\Carbon::parse($overtime->date)->format('d/m/Y');
+                    } elseif (strpos($dateOld, '/') === false) {
+                        $dateOld = \Carbon\Carbon::parse($dateOld)->format('d/m/Y');
+                    }
+                @endphp
                 <input type="text" name="date" id="date"
-                    value="{{ \Carbon\Carbon::parse($overtime->date)->format('d/m/Y') }}"
+                    value="{{ $dateOld }}"
                     placeholder="Select date"
                     class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
             </div>

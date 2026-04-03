@@ -72,12 +72,12 @@
         <table class="w-full">    
             <thead class="bg-gray-50 border-b border-gray-100">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Designation</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Salary</th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Designation</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Salary</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             
@@ -85,19 +85,19 @@
                 @foreach($employees as $employee)
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-center">
                             <div class="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-medium">
                                 {{ substr($employee->name, 0, 1) }}
                             </div>
                             <span class="ml-2 text-sm font-medium text-gray-900">{{ $employee->name }}</span>
                         </div>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $employee->email }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $employee->phone }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $employee->designation }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">৳{{ number_format($employee->salary, 2) }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-right">
-                        <div class="flex items-center justify-end gap-1">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ $employee->phone }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ $employee->email }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ $employee->designation }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">৳{{ number_format($employee->salary, 2) }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                        <div class="flex items-center justify-center gap-1">
                             <a href="{{ route('employees.edit', $employee->id) }}" class="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Edit">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>

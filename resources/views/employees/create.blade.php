@@ -11,6 +11,12 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Employee Number</label>
+                    <input type="text" name="employee_number" value="{{ old('employee_number') }}" 
+                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
                     <input type="text" name="name" value="{{ old('name') }}" 
                         class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500" required>

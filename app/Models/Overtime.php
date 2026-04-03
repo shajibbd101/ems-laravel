@@ -9,7 +9,8 @@ class Overtime extends Model
     protected $fillable = [
         'employee_id',
         'type',
-        'date'
+        'shift',
+        'date',
     ];
 
     public function employee()

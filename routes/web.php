@@ -92,7 +92,7 @@ Route::get('/employee-search', function (Request $request) {
 
     $employees = Employee::where('name', 'LIKE', "%{$query}%")
         ->limit(5)
-        ->get();
+        ->get(['id', 'name', 'phone']);
 
     return response()->json($employees);
 });

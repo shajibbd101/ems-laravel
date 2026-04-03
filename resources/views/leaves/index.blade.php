@@ -6,19 +6,23 @@
         
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 lg:gap-3">
             <!-- Search & Filter -->
-            <form action="{{ route('leaves.search') }}" method="GET" class="flex items-center gap-2">
+            <form action="{{ route('leaves.index') }}" method="GET" class="flex items-center gap-2">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-4 w-4 lg:h-5 lg:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search by name" class="pl-9 lg:pl-10 w-40 sm:w-52 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
+                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Search by name or number" class="pl-9 lg:pl-10 w-40 sm:w-52 rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
                 </div>
             </form>
             <form action="{{ route('leaves.index') }}" method="GET" class="flex items-center gap-2">
+                <input type="date" name="date" value="{{ request('date') }}" class="rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
                 <input type="month" name="month" value="{{ request('month') }}" class="rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2">
                 <button type="submit" class="px-2 lg:px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors">Filter</button>
+                @if(request('date') || request('month'))
+                    <a href="{{ route('leaves.index') }}" class="px-2 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors">Clear</a>
+                @endif
             </form>
 
             <!-- Buttons -->
@@ -61,12 +65,13 @@
         <table class="w-full">    
             <thead class="bg-gray-50 border-b border-gray-100">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Employee</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">From</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">To</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Days</th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Employee</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">From</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">To</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Days</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             
@@ -74,24 +79,25 @@
                 @foreach($leaves as $leave)
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-center">
                             <div class="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-medium">
                                 {{ substr($leave->employee->name, 0, 1) }}
                             </div>
                             <span class="ml-2 text-sm font-medium text-gray-900">{{ $leave->employee->name }}</span>
                         </div>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ $leave->employee->phone }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium 
-                            {{ $leave->type == 'CL' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
+                            {{ $leave->type == 'CL' ? 'bg-emerald-100 text-emerald-700' : ($leave->type == 'ML' ? 'bg-red-100 text-red-700' : 'bg-indigo-100 text-indigo-700') }}">
                             {{ $leave->type }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($leave->from_date)->format('d/m/Y') }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($leave->to_date)->format('d/m/Y') }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $leave->days }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-right">
-                        <div class="flex items-center justify-end gap-1">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ \Carbon\Carbon::parse($leave->from_date)->format('d/m/Y') }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 text-center">{{ \Carbon\Carbon::parse($leave->to_date)->format('d/m/Y') }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ $leave->days }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                        <div class="flex items-center justify-center gap-1">
                             <a href="{{ route('leaves.edit', $leave->id) }}" class="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Edit">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
